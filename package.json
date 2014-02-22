@@ -1,0 +1,19 @@
+{
+  "name": "bip38",
+  "version": "0.0.0",
+  "description": "DESCRIPTION HERE",
+  "main": "lib/bip38.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "keywords": [
+    "crypto",
+    "cryptography",
+    "bitcoin",
+    "litecoin",
+    "currency",
+    "money"
+  ],
+  "author": "JP Richardson",
+  "license": "MIT"
+}
