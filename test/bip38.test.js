@@ -9,18 +9,25 @@ describe('+ bip38', function() {
         var passphrase = 'TestingOneTwoThree';
         var encrypted = '6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg';
         var unencryptedWIF = '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR';
-        var unencryptedHex: 'CBF4B9F70470856BB4F40F80B87EDB90865997FFEE6DF315AB166D713AF433A5';
+        var unencryptedHex = 'CBF4B9F70470856BB4F40F80B87EDB90865997FFEE6DF315AB166D713AF433A5';
+
+        //var out = bip38.encrypt('0x' + unencryptedHex, passphrase)
+        var out = bip38.encrypt(unencryptedWIF, passphrase);
+        EQ (out, encrypted);
       })
 
       it('test #2', function() {
         var passphrase = 'Satoshi';
         var encrypted = '6PRNFFkZc2NZ6dJqFfhRoFNMR9Lnyj7dYGrzdgXXVMXcxoKTePPX1dWByq';
-        var unencryptedWIF: '5HtasZ6ofTHP6HCwTqTkLDuLQisYPah7aUnSKfC7h4hMUVw2gi5';
+        var unencryptedWIF = '5HtasZ6ofTHP6HCwTqTkLDuLQisYPah7aUnSKfC7h4hMUVw2gi5';
         var unencryptedHex = '09C2686880095B1A4C249EE3AC4EEA8A014F11E6F986D0B5025AC1F39AFBD9AE';
+
+        var out = bip38.encrypt(unencryptedWIF, passphrase);
+        EQ (out, encrypted);
       })
     })
 
-    describe('> when compression', function() {
+    describe.skip('> when compression', function() {
       it('test #1', function() {
         var passphrase = 'TestingOneTwoThree';
         var encrypted = '6PYNKZ1EAgYgmQfmNVamxyXVWHzK5s6DGhwP4J5o44cvXdoY7sRzhtpUeo';
@@ -37,7 +44,7 @@ describe('+ bip38', function() {
     })
   })
 
-  describe('> when EC multiply', function() {
+  describe.skip('> when EC multiply', function() {
     describe('> when no compression, no lot/sequence numbers', function() {
       it('test #1', function() {
         var passphrase = 'TestingOneTwoThree';

@@ -15,5 +15,17 @@
     "money"
   ],
   "author": "JP Richardson",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "aes": "~0.1.0",
+    "scryptsy": "~0.1.0",
+    "crypto-hashing": "~0.1.0",
+    "binstring": "~0.2.0",
+    "bs58": "~0.3.0",
+    "btc-address": "~0.4.0",
+    "eckey": "~0.3.0"
+  },
+  "devDependencies": {
+    "terst": "0.0.2"
+  }
 }
