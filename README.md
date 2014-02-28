@@ -58,7 +58,7 @@ var privateKeyWif = '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR';
 
 var bip38 = new Bip38();
 bip38.addressVersion = {private: 0x80, public: 0x0};
-bip38.encrypt(privateKeyWif, "super-secret"});
+bip38.encrypt(privateKeyWif, "super-secret", "1Jq6MksXQVWzrznvZzxkV6oY57oWXD9TXB"});
 ```
 
 ### scryptParams
@@ -73,9 +73,9 @@ bip38.scryptParams = {N: 8192, r: 8, p: 8};
 ```
 
 
-### encrypt(wif, passphrase)
+### encrypt(wif, passphrase, address)
 
-A method that encrypts the private key. `wif` is the string value of the wallet import format key. `passphrase` the passphrase to encrypt the key with. 
+A method that encrypts the private key. `wif` is the string value of the wallet import format key. `passphrase` the passphrase to encrypt the key with. `address` is the public address.
 
 
 Returns the encrypted string.
@@ -88,14 +88,14 @@ var Bip38 = require('bip38');
 var privateKeyWif = '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR';
 
 var bip38 = new Bip38();
-var encrypted = bip38.encrypt(privateKeyWif, 'TestingOneTwoThree');
+var encrypted = bip38.encrypt(privateKeyWif, 'TestingOneTwoThree', "1Jq6MksXQVWzrznvZzxkV6oY57oWXD9TXB");
 console.log(encrypted); // => 6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg
 ```
 
 
-### decrypt(encryptedKey, passhprase)
+### decrypt(encryptedKey, passhprase, address)
 
-A method that decrypts the encrypted string. `encryptedKey` is the string value of the encrypted key. `passphrase` is the passphrase to decrypt the key with.
+A method that decrypts the encrypted string. `encryptedKey` is the string value of the encrypted key. `passphrase` is the passphrase to decrypt the key with. `address` is the public address.
 
 
 ```js
@@ -104,7 +104,7 @@ var Bip38 = require('bip38');
 var encryptedKey = '6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg';
 
 var bip38 = new Bip38();
-var privateKeyWif = bip38.decrypt(encryptedKey, 'TestingOneTwoThree'});
+var privateKeyWif = bip38.decrypt(encryptedKey, 'TestingOneTwoThree', "1Jq6MksXQVWzrznvZzxkV6oY57oWXD9TXB");
 console.log(privateKeyWif); // =>  '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR'
 ```
 
