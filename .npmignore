@@ -1,0 +1,4 @@
+Makefile
+test/
+.min-wd
+.gitignore
