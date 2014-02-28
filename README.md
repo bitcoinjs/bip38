@@ -108,6 +108,10 @@ var privateKeyWif = bip38.decrypt(encryptedKey, 'TestingOneTwoThree');
 console.log(privateKeyWif); // =>  '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR'
 ```
 
+**note:** To check for an invalid password, you'll want to generate the public address from the output of the `decrypt()` function. If it doesn't equal the expected address or the address checksum, then chances are, it's an invalid password. The reason that this logic was not included is because it would have required a lot of dependencies: `ECKey` and `Address`. Currently, `ECKey` is pretty heavy on dependencies.
+
+
+
 
 
 
