@@ -25,5 +25,9 @@
     "terst": "0.0.2",
     "mochify": "~0.4.2",
     "mocha": "~1.17.1"
+  },
+  "repository": {
+    "url": "git@github.com:cryptocoinjs/bip38.git",
+    "type": "git"
   }
 }
