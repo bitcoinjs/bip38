@@ -1,4 +1,4 @@
-var bip38 = require('../')
+var Bip38 = require('../')
 
 require('terst')
 
@@ -9,11 +9,12 @@ describe('+ bip38', function() {
         var passphrase = 'TestingOneTwoThree';
         var encrypted = '6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg';
         var unencryptedWIF = '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR';
-        var unencryptedHex = 'CBF4B9F70470856BB4F40F80B87EDB90865997FFEE6DF315AB166D713AF433A5';
+        var unencryptedHex = 'cbf4b9f70470856bb4f40f80b87edb90865997ffee6df315ab166d713af433a5';
+        var address = "1Jq6MksXQVWzrznvZzxkV6oY57oWXD9TXB";
 
-        //var out = bip38.encrypt('0x' + unencryptedHex, passphrase)
-        var out = bip38.encrypt(unencryptedWIF, passphrase);
-        EQ (out, encrypted);
+        var bip38 = new Bip38();
+        EQ (bip38.encrypt(unencryptedWIF, passphrase, address), encrypted);
+        EQ (bip38.decrypt(encrypted, passphrase, address), unencryptedWIF);
       })
 
       it('test #2', function() {
@@ -21,18 +22,25 @@ describe('+ bip38', function() {
         var encrypted = '6PRNFFkZc2NZ6dJqFfhRoFNMR9Lnyj7dYGrzdgXXVMXcxoKTePPX1dWByq';
         var unencryptedWIF = '5HtasZ6ofTHP6HCwTqTkLDuLQisYPah7aUnSKfC7h4hMUVw2gi5';
         var unencryptedHex = '09C2686880095B1A4C249EE3AC4EEA8A014F11E6F986D0B5025AC1F39AFBD9AE';
+        var address = '1AvKt49sui9zfzGeo8EyL8ypvAhtR2KwbL';
 
-        var out = bip38.encrypt(unencryptedWIF, passphrase);
-        EQ (out, encrypted);
+        var bip38 = new Bip38();
+        EQ (bip38.encrypt(unencryptedWIF, passphrase, address), encrypted);
+        EQ (bip38.decrypt(encrypted, passphrase, address), unencryptedWIF);
       })
     })
 
-    describe.skip('> when compression', function() {
+    describe('> when compression', function() {
       it('test #1', function() {
         var passphrase = 'TestingOneTwoThree';
         var encrypted = '6PYNKZ1EAgYgmQfmNVamxyXVWHzK5s6DGhwP4J5o44cvXdoY7sRzhtpUeo';
         var unencryptedWIF = 'L44B5gGEpqEDRS9vVPz7QT35jcBG2r3CZwSwQ4fCewXAhAhqGVpP';
         var unencryptedHex = 'CBF4B9F70470856BB4F40F80B87EDB90865997FFEE6DF315AB166D713AF433A5';
+        var address = '164MQi977u9GUteHr4EPH27VkkdxmfCvGW';
+
+        var bip38 = new Bip38();
+        EQ (bip38.encrypt(unencryptedWIF, passphrase, address), encrypted);
+        EQ (bip38.decrypt(encrypted, passphrase, address), unencryptedWIF);
       })
 
       it('test #2', function() {
@@ -40,6 +48,11 @@ describe('+ bip38', function() {
         var encrypted = '6PYLtMnXvfG3oJde97zRyLYFZCYizPU5T3LwgdYJz1fRhh16bU7u6PPmY7';
         var unencryptedWIF = 'KwYgW8gcxj1JWJXhPSu4Fqwzfhp5Yfi42mdYmMa4XqK7NJxXUSK7';
         var unencryptedHex = '09C2686880095B1A4C249EE3AC4EEA8A014F11E6F986D0B5025AC1F39AFBD9AE';
+        var address = "1HmPbwsvG5qJ3KJfxzsZRZWhbm1xBMuS8B";
+
+        var bip38 = new Bip38();
+        EQ (bip38.encrypt(unencryptedWIF, passphrase, address), encrypted);
+        EQ (bip38.decrypt(encrypted, passphrase, address), unencryptedWIF);
       })
     })
   })
