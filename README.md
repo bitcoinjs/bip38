@@ -93,9 +93,9 @@ console.log(encrypted); // => 6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn
 ```
 
 
-### decrypt(encryptedKey, passhprase, address)
+### decrypt(encryptedKey, passhprase)
 
-A method that decrypts the encrypted string. `encryptedKey` is the string value of the encrypted key. `passphrase` is the passphrase to decrypt the key with. `address` is the public address.
+A method that decrypts the encrypted string. `encryptedKey` is the string value of the encrypted key. `passphrase` is the passphrase to decrypt the key with.
 
 
 ```js
@@ -104,9 +104,11 @@ var Bip38 = require('bip38');
 var encryptedKey = '6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg';
 
 var bip38 = new Bip38();
-var privateKeyWif = bip38.decrypt(encryptedKey, 'TestingOneTwoThree', "1Jq6MksXQVWzrznvZzxkV6oY57oWXD9TXB");
+var privateKeyWif = bip38.decrypt(encryptedKey, 'TestingOneTwoThree');
 console.log(privateKeyWif); // =>  '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR'
 ```
+
+
 
 
 

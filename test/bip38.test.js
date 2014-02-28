@@ -14,7 +14,7 @@ describe('+ bip38', function() {
 
         var bip38 = new Bip38();
         EQ (bip38.encrypt(unencryptedWIF, passphrase, address), encrypted);
-        EQ (bip38.decrypt(encrypted, passphrase, address), unencryptedWIF);
+        EQ (bip38.decrypt(encrypted, passphrase), unencryptedWIF);
       })
 
       it('test #2', function() {
@@ -26,7 +26,28 @@ describe('+ bip38', function() {
 
         var bip38 = new Bip38();
         EQ (bip38.encrypt(unencryptedWIF, passphrase, address), encrypted);
-        EQ (bip38.decrypt(encrypted, passphrase, address), unencryptedWIF);
+        EQ (bip38.decrypt(encrypted, passphrase), unencryptedWIF);
+      })
+
+      describe.skip('> when incorrect passphrase', function() {
+        it('should throw an exception', function() {
+          var passphrase = 'Satoshi';
+          var encrypted = '6PRNFFkZc2NZ6dJqFfhRoFNMR9Lnyj7dYGrzdgXXVMXcxoKTePPX1dWByq';
+          var unencryptedWIF = '5HtasZ6ofTHP6HCwTqTkLDuLQisYPah7aUnSKfC7h4hMUVw2gi5';
+          var unencryptedHex = '09C2686880095B1A4C249EE3AC4EEA8A014F11E6F986D0B5025AC1F39AFBD9AE';
+          var address = '1AvKt49sui9zfzGeo8EyL8ypvAhtR2KwbL';
+
+          var bip38 = new Bip38();
+          var err = null;
+          try {
+            var res = bip38.decrypt(encrypted, "Not Satoshi.", address);
+            console.log(res)
+          } catch (e) {
+            err = e
+          }
+
+          EQ (err.message, 'Incorrect passphrase');
+        })
       })
     })
 
@@ -40,7 +61,7 @@ describe('+ bip38', function() {
 
         var bip38 = new Bip38();
         EQ (bip38.encrypt(unencryptedWIF, passphrase, address), encrypted);
-        EQ (bip38.decrypt(encrypted, passphrase, address), unencryptedWIF);
+        EQ (bip38.decrypt(encrypted, passphrase), unencryptedWIF);
       })
 
       it('test #2', function() {
@@ -52,7 +73,7 @@ describe('+ bip38', function() {
 
         var bip38 = new Bip38();
         EQ (bip38.encrypt(unencryptedWIF, passphrase, address), encrypted);
-        EQ (bip38.decrypt(encrypted, passphrase, address), unencryptedWIF);
+        EQ (bip38.decrypt(encrypted, passphrase), unencryptedWIF);
       })
     })
   })
