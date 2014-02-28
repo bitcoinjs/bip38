@@ -18,24 +18,6 @@ Usage
     npm install --save bip38
 
 
-### Example
-
-```js
-var Bip38 = require('bip38');
-
-var bip38 = new Bip38();
-bip38.generateAddress = function(privateKeyBytes) {
-  /* code to generate public address */
-  return {address: address, compressed: compressed};
-}
-
-var encryptedKey = bip38.encrypt(key, passphrase, 'buffer');
-var wifKey = bip38.decrypt(encryptedKey, passphrase, 'wif');
-
-
-bip38.encrypt({key: key, passhprase: passhphrase, keyType: 'wif', scryptParams: {N: 16384, r: 8, p: 8}});
-```
-
 API
 ---
 
