@@ -7,7 +7,7 @@ A JavaScript component that adheres to the [BIP38](https://github.com/bitcoin/bi
 Why?
 ----
 
-BIP38 is a standard process to encrypt crypto currency private keys that is imprevious to brute force attacks thus protecting the user.
+BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys that is imprevious to brute force attacks thus protecting the user.
 
 
 Usage
@@ -123,3 +123,4 @@ References
 - https://github.com/casascius/Bitcoin-Address-Utility/tree/master/Model
 - https://github.com/nomorecoin/python-bip38-testing/blob/master/bip38.py
 - https://github.com/pointbiz/bitaddress.org/blob/master/src/ninja.key.js 
+

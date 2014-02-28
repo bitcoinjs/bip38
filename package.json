@@ -1,7 +1,7 @@
 {
   "name": "bip38",
   "version": "0.0.0",
-  "description": "DESCRIPTION HERE",
+  "description": "BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys that is imprevious to brute force attacks thus protecting the user.",
   "main": "lib/bip38.js",
   "scripts": {
     "test": "make test"
@@ -15,7 +15,6 @@
     "money"
   ],
   "author": "JP Richardson",
-  "license": "MIT",
   "dependencies": {
     "aes": "~0.1.0",
     "scryptsy": "~0.1.0",
