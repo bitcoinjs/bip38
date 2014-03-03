@@ -1,6 +1,13 @@
-var Bip38 = require('../')
+var Bip38 = null
 
-require('terst')
+//node.js or mochify
+if (typeof module != 'undefined' && module.exports) {
+  Bip38 = require('../');
+  require('terst');
+} else { //manually running browser-test.js
+  Bip38 = window.mod;
+}
+
 
 describe('+ bip38', function() {
   describe('> when no EC multiply', function() {
