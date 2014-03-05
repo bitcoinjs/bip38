@@ -19,7 +19,10 @@
     "aes": "~0.1.0",
     "scryptsy": "~0.1.0",
     "crypto-hashing": "~0.1.0",
-    "bs58": "~0.3.0"
+    "bigi": "~0.2.0",
+    "bs58": "~0.3.0",
+    "ecurve": "~0.2.0",
+    "ecurve-names": "~0.2.0"
   },
   "devDependencies": {
     "terst": "0.0.2",

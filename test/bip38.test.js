@@ -85,7 +85,7 @@ describe('+ bip38', function() {
     })
   })
 
-  describe.skip('> when EC multiply', function() {
+  describe('> when EC multiply', function() {
     describe('> when no compression, no lot/sequence numbers', function() {
       it('test #1', function() {
         var passphrase = 'TestingOneTwoThree';
@@ -94,6 +94,9 @@ describe('+ bip38', function() {
         var bitcoinAddress = '1PE6TQi6HTVNz5DLwB1LcpMBALubfuN2z2';
         var unencryptedWIF = '5K4caxezwjGCGfnoPTZ8tMcJBLB7Jvyjv4xxeacadhq8nLisLR2';
         var unencryptedHex = 'A43A940577F4E97F5C4D39EB14FF083A98187C64EA7C99EF7CE460833959A519';
+        
+        var bip38 = new Bip38();
+        EQ (bip38.decrypt(encrypted, passphrase), unencryptedWIF);
       })
 
       it('test #2', function() {
@@ -103,6 +106,9 @@ describe('+ bip38', function() {
         var bitcoinAddress = '1CqzrtZC6mXSAhoxtFwVjz8LtwLJjDYU3V';
         var unencryptedWIF = '5KJ51SgxWaAYR13zd9ReMhJpwrcX47xTJh2D3fGPG9CM8vkv5sH';
         var unencryptedHex = 'C2C8036DF268F498099350718C4A3EF3984D2BE84618C2650F5171DCC5EB660A';
+        
+        var bip38 = new Bip38();
+        EQ (bip38.decrypt(encrypted, passphrase), unencryptedWIF);
       })
     })
 
@@ -117,6 +123,9 @@ describe('+ bip38', function() {
         var confirmationCode = 'cfrm38V8aXBn7JWA1ESmFMUn6erxeBGZGAxJPY4e36S9QWkzZKtaVqLNMgnifETYw7BPwWC9aPD';
         var lot = 263183;
         var seq = 1;
+        
+        var bip38 = new Bip38();
+        EQ (bip38.decrypt(encrypted, passphrase), unencryptedWIF);
       })
 
       it('test #2', function() {
@@ -129,6 +138,9 @@ describe('+ bip38', function() {
         var confirmationCode = 'cfrm38V8G4qq2ywYEFfWLD5Cc6msj9UwsG2Mj4Z6QdGJAFQpdatZLavkgRd1i4iBMdRngDqDs51';  
         var lot = 806938;
         var sequence = 1;
+        
+        var bip38 = new Bip38();
+        EQ (bip38.decrypt(encrypted, passphrase), unencryptedWIF);
       })
     })
   })
