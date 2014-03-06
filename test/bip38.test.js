@@ -31,7 +31,7 @@ describe('+ bip38', function() {
         var unencryptedHex = '09C2686880095B1A4C249EE3AC4EEA8A014F11E6F986D0B5025AC1F39AFBD9AE';
         var address = '1AvKt49sui9zfzGeo8EyL8ypvAhtR2KwbL';
 
-        var bip38 = new Bip38();
+        var bip38 = Bip38(); //try it without constructor
         EQ (bip38.encrypt(unencryptedWIF, passphrase, address), encrypted);
         EQ (bip38.decrypt(encrypted, passphrase), unencryptedWIF);
       })
