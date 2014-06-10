@@ -18,7 +18,6 @@
   "dependencies": {
     "aes": "~0.1.0",
     "scryptsy": "^1.0.0",
-    "crypto-hashing": "~0.1.0",
     "bigi": "^1.2.0",
     "bs58": "~0.3.0",
     "ecurve": "^0.8.0"
