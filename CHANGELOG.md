@@ -1,3 +1,8 @@
+1.0.0 / 2014-06-10
+------------------
+- upgraded `"scryptsy": "~0.2.0"` to `"scryptsy": "^1.0.0"`
+
+
 0.1.0 / 2014-03-05
 ------------------
 - added support to decrypt ECMultiplied keys, #1

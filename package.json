@@ -17,7 +17,7 @@
   "author": "JP Richardson",
   "dependencies": {
     "aes": "~0.1.0",
-    "scryptsy": "~0.2.0",
+    "scryptsy": "^1.0.0",
     "crypto-hashing": "~0.1.0",
     "bigi": "~0.2.0",
     "bs58": "~0.3.0",
@@ -26,11 +26,15 @@
   },
   "devDependencies": {
     "terst": "0.0.2",
-    "mochify": "~0.4.2",
-    "mocha": "~1.17.1"
+    "mochify": "^0.9.3",
+    "mocha": "^1.20.1",
+    "crypto-browserify": "^2.1.8"
   },
   "repository": {
     "url": "git@github.com:cryptocoinjs/bip38.git",
     "type": "git"
+  },
+  "browser": {
+    "crypto": "crypto-browserify"
   }
 }
