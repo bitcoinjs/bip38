@@ -7,6 +7,7 @@
 - removed semicolons per http://cryptocoinjs.com/about/contributing/#semicolons
 - removed `crypto-hashing` dep
 - removed `bs58` dep, added `coinstring` dep
+- removed `terst` for `assert`
 
 0.1.0 / 2014-03-05
 ------------------

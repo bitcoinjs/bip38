@@ -1,14 +1,5 @@
-var Bip38 = null
-
-//node.js or mochify
-if (typeof module != 'undefined' && module.exports) {
-  Bip38 = require('../');
-  require('terst');
-} else { //manually running browser-test.js
-  Bip38 = window.mod;
-}
-
 var assert = require('assert')
+var Bip38 = require('../')
 
 var fixtures = require('./fixtures/bip38')
 

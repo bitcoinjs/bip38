@@ -23,7 +23,6 @@
     "coinstring": "^1.0.1"
   },
   "devDependencies": {
-    "terst": "0.0.2",
     "mochify": "^0.9.3",
     "mocha": "^1.20.1",
     "crypto-browserify": "^2.1.8"
