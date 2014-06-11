@@ -2,3 +2,4 @@ Makefile
 test/
 .min-wd
 .gitignore
+.travis.yml

@@ -8,6 +8,9 @@
 - removed `crypto-hashing` dep
 - removed `bs58` dep, added `coinstring` dep
 - removed `terst` for `assert`
+- added TravisCI
+- added Coveralls
+- added testling
 
 0.1.0 / 2014-03-05
 ------------------
