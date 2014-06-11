@@ -6,6 +6,7 @@
 - upgraded `"ecurve": "~0.3.0"` to `"ecurve": "^0.8.0"`
 - removed semicolons per http://cryptocoinjs.com/about/contributing/#semicolons
 - removed `crypto-hashing` dep
+- removed `bs58` dep, added `coinstring` dep
 
 0.1.0 / 2014-03-05
 ------------------
