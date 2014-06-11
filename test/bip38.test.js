@@ -9,8 +9,8 @@ describe('bip38', function() {
       it('should encrypt and decrypt ' + f.description, function() {
         var bip38 = new Bip38()
         if (!f.decryptOnly)
-          EQ (bip38.encrypt(f.wif, f.passphrase, f.address), f.bip38)
-        EQ (bip38.decrypt(f.bip38, f.passphrase), f.wif)
+          assert.equal(bip38.encrypt(f.wif, f.passphrase, f.address), f.bip38)
+        assert.equal(bip38.decrypt(f.bip38, f.passphrase), f.wif)
       })
     })
   })
