@@ -11,6 +11,7 @@
 - added TravisCI
 - added Coveralls
 - added testling
+- removed static level methods, must call `new`
 
 0.1.0 / 2014-03-05
 ------------------
