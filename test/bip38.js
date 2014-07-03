@@ -30,7 +30,7 @@ describe('bip38', function() {
       if (f.decryptOnly) return
 
       it('should encrypt ' + f.description, function() {
-          assert.equal(bip38.encrypt(f.wif, f.passphrase, f.address), f.bip38)
+        assert.equal(bip38.encrypt(f.wif, f.passphrase, f.address), f.bip38)
       })
     })
   })
