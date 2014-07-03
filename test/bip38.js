@@ -1,7 +1,7 @@
 var assert = require('assert')
 var Bip38 = require('../')
 
-var fixtures = require('./fixtures/bip38')
+var fixtures = require('./fixtures')
 
 describe('bip38', function() {
   describe('> when valid', function() {
