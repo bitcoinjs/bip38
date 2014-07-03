@@ -4,27 +4,26 @@
   "description": "BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys that is imprevious to brute force attacks thus protecting the user.",
   "main": "lib/bip38.js",
   "keywords": [
+    "bitcoin",
     "crypto",
     "cryptography",
-    "bitcoin",
-    "litecoin",
-    "currency",
-    "money"
+    "litecoin"
   ],
   "author": "JP Richardson",
   "dependencies": {
     "aes": "~0.1.0",
-    "scryptsy": "^1.0.0",
     "bigi": "^1.2.0",
-    "ecurve": "^0.8.0",
-    "coinstring": "^1.0.1"
+    "coinstring": "^2.0.0",
+    "ecurve": "^1.0.0",
+    "scryptsy": "^1.0.0"
   },
   "devDependencies": {
-    "mochify": "^0.9.3",
-    "mocha": "^1.20.1",
-    "crypto-browserify": "^2.1.8",
     "coveralls": "^2.10.0",
-    "istanbul": "^0.2.11"
+    "crypto-browserify": "^2.1.8",
+    "istanbul": "^0.2.11",
+    "jshint": "2.5.1",
+    "mocha": "^1.20.1",
+    "mochify": "^0.9.3"
   },
   "repository": {
     "url": "git@github.com:cryptocoinjs/bip38.git",
@@ -34,21 +33,22 @@
     "crypto": "crypto-browserify"
   },
   "scripts": {
-    "test": "mocha --ui bdd",
-    "unit": "./node_modules/.bin/mocha",
     "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --reporter list test/*.js",
-    "coveralls": "npm run-script coverage && node ./node_modules/.bin/coveralls < coverage/lcov.info"
+    "coveralls": "npm run-script coverage && node ./node_modules/.bin/coveralls < coverage/lcov.info",
+    "jshint": "./node_modules/.bin/jshint --config jshint.json lib/*.js ; true",
+    "test": "mocha --ui bdd",
+    "unit": "./node_modules/.bin/mocha"
   },
   "testling": {
     "files": "test/*.js",
     "harness": "mocha",
     "browsers": [
-      "ie/9..latest",
-      "firefox/latest",
+      "android-browser/4.2..latest",
       "chrome/latest",
-      "safari/6.0..latest",
+      "firefox/latest",
+      "ie/9..latest",
       "iphone/6.0..latest",
-      "android-browser/4.2..latest"
+      "safari/6.0..latest"
     ]
   }
 }

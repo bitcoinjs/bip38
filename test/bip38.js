@@ -1,27 +1,36 @@
 var assert = require('assert')
 var Bip38 = require('../')
 
-var fixtures = require('./fixtures/bip38')
+var fixtures = require('./fixtures')
 
 describe('bip38', function() {
-  describe('> when valid', function() {
+  var bip38
+  beforeEach(function() {
+    bip38 = new Bip38()
+  })
+
+  describe('decrypt', function() {
     fixtures.valid.forEach(function(f) {
-      it('should encrypt and decrypt ' + f.description, function() {
-        var bip38 = new Bip38()
-        if (!f.decryptOnly)
-          assert.equal(bip38.encrypt(f.wif, f.passphrase, f.address), f.bip38)
+      it('should decrypt ' + f.description, function() {
         assert.equal(bip38.decrypt(f.bip38, f.passphrase), f.wif)
+      })
+    })
+
+    fixtures.invalid.forEach(function(f) {
+      it('should throw ' + f.description, function() {
+        assert.throws(function() {
+          bip38.decrypt(f.bip38, f.passphrase, f.address)
+        }, new RegExp(f.description, 'i'))
       })
     })
   })
 
-  describe('> when invalid', function() {
-    fixtures.invalid.forEach(function(f) {
-      it('should throw ' + f.description, function() {
-        var bip38 = new Bip38()
-        assert.throws(function() {
-          bip38.decrypt(f.bip38, f.passphrase, f.address)
-        }, new RegExp(f.description, 'i'))
+  describe('encrypt', function() {
+    fixtures.valid.forEach(function(f) {
+      if (f.decryptOnly) return
+
+      it('should encrypt ' + f.description, function() {
+        assert.equal(bip38.encrypt(f.wif, f.passphrase, f.address), f.bip38)
       })
     })
   })
