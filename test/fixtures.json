@@ -5,35 +5,35 @@
       "bip38": "6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg",
       "wif": "5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR",
       "address": "1Jq6MksXQVWzrznvZzxkV6oY57oWXD9TXB",
-      "description": "no EC multiply / no compressesion #1"
+      "description": "no EC multiply / no compression #1"
     },
     {
       "passphrase": "Satoshi",
       "bip38": "6PRNFFkZc2NZ6dJqFfhRoFNMR9Lnyj7dYGrzdgXXVMXcxoKTePPX1dWByq",
       "wif": "5HtasZ6ofTHP6HCwTqTkLDuLQisYPah7aUnSKfC7h4hMUVw2gi5",
       "address": "1AvKt49sui9zfzGeo8EyL8ypvAhtR2KwbL",
-      "description": "no EC multiply / no compressesion #2"
+      "description": "no EC multiply / no compression #2"
     },
     {
       "passphrase": "TestingOneTwoThree",
       "bip38": "6PYNKZ1EAgYgmQfmNVamxyXVWHzK5s6DGhwP4J5o44cvXdoY7sRzhtpUeo",
       "wif": "L44B5gGEpqEDRS9vVPz7QT35jcBG2r3CZwSwQ4fCewXAhAhqGVpP",
       "address": "164MQi977u9GUteHr4EPH27VkkdxmfCvGW",
-      "description": "no EC multiply / compressesion #1"
+      "description": "no EC multiply / compression #1"
     },
     {
       "passphrase": "Satoshi",
       "bip38": "6PYLtMnXvfG3oJde97zRyLYFZCYizPU5T3LwgdYJz1fRhh16bU7u6PPmY7",
       "wif": "KwYgW8gcxj1JWJXhPSu4Fqwzfhp5Yfi42mdYmMa4XqK7NJxXUSK7",
       "address": "1HmPbwsvG5qJ3KJfxzsZRZWhbm1xBMuS8B",
-      "description": "no EC multiply / compressesion #2"
+      "description": "no EC multiply / compression #2"
     },
     {
       "passphrase": "TestingOneTwoThree",
       "bip38": "6PfQu77ygVyJLZjfvMLyhLMQbYnu5uguoJJ4kMCLqWwPEdfpwANVS76gTX",
       "wif": "5K4caxezwjGCGfnoPTZ8tMcJBLB7Jvyjv4xxeacadhq8nLisLR2",
       "address": "1PE6TQi6HTVNz5DLwB1LcpMBALubfuN2z2",
-      "description": "EC multiply / no compressesion, no lot sequence #1",
+      "description": "EC multiply / no compression, no lot sequence #1",
       "decryptOnly": true,
       "code": "passphrasepxFy57B9v8HtUsszJYKReoNDV6VHjUSGt8EVJmux9n1J3Ltf1gRxyDGXqnf9qm"
     },
@@ -42,7 +42,7 @@
       "bip38": "6PfLGnQs6VZnrNpmVKfjotbnQuaJK4KZoPFrAjx1JMJUa1Ft8gnf5WxfKd",
       "wif": "5KJ51SgxWaAYR13zd9ReMhJpwrcX47xTJh2D3fGPG9CM8vkv5sH",
       "address": "1CqzrtZC6mXSAhoxtFwVjz8LtwLJjDYU3V",
-      "description": "EC multiply / no compressesion, no lot sequence #2",
+      "description": "EC multiply / no compression, no lot sequence #2",
       "decryptOnly": true,
       "code": "passphraseoRDGAXTWzbp72eVbtUDdn1rwpgPUGjNZEc6CGBo8i5EC1FPW8wcnLdq4ThKzAS"
     },
@@ -51,7 +51,7 @@
       "bip38": "6PgNBNNzDkKdhkT6uJntUXwwzQV8Rr2tZcbkDcuC9DZRsS6AtHts4Ypo1j",
       "wif": "5JLdxTtcTHcfYcmJsNVy1v2PMDx432JPoYcBTVVRHpPaxUrdtf8",
       "address": "1Jscj8ALrYu2y9TD8NrpvDBugPedmbj4Yh",
-      "description": "EC multiply / no compressesion, lot sequence #1",
+      "description": "EC multiply / no compression, lot sequence #1",
       "decryptOnly": true,
       "confirm": "cfrm38V8aXBn7JWA1ESmFMUn6erxeBGZGAxJPY4e36S9QWkzZKtaVqLNMgnifETYw7BPwWC9aPD",
       "code": "passphraseaB8feaLQDENqCgr4gKZpmf4VoaT6qdjJNJiv7fsKvjqavcJxvuR1hy25aTu5sX",
@@ -63,7 +63,7 @@
       "bip38": "6PgGWtx25kUg8QWvwuJAgorN6k9FbE25rv5dMRwu5SKMnfpfVe5mar2ngH",
       "wif": "5KMKKuUmAkiNbA3DazMQiLfDq47qs8MAEThm4yL8R2PhV1ov33D",
       "address": "1Lurmih3KruL4xDB5FmHof38yawNtP9oGf",
-      "description": "EC multiply / no compressesion, lot sequence #1",
+      "description": "EC multiply / no compression, lot sequence #1",
       "decryptOnly": true,
       "confirm": "cfrm38V8G4qq2ywYEFfWLD5Cc6msj9UwsG2Mj4Z6QdGJAFQpdatZLavkgRd1i4iBMdRngDqDs51",
       "code": "passphrased3z9rQJHSyBkNBwTRPkUGNVEVrUAcfAXDyRU1V28ie6hNFbqDwbFBvsTK7yWVK",
