@@ -1,3 +1,8 @@
+1.1.1 / 2014-09-19
+------------------
+- bugfix: enforce zero padding [Daniel Cousens](https://github.com/cryptocoinjs/bip38/commit/e73598d0fc1d1b3c04c132c34053e96bec6bd201)
+- add MIT license to package.json
+
 1.1.0 / 2014-07-11
 ------------------
 - added methods `encryptRaw` and `decryptRaw` [Daniel Cousens](https://github.com/cryptocoinjs/bip38/pull/4)
