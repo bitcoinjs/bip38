@@ -12,3 +12,16 @@ A JavaScript component that adheres to the [BIP38](https://github.com/bitcoin/bi
 Official documentation:
 
 http://cryptocoinjs.com/modules/currency/bip38/
+
+
+## Examples
+
+```javascript
+var bip38 = new (require('bip38'))
+  
+bip38.encrypt('5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss', 'qwerty', '1HZwkjkeaoZfTSaJxDw6aKkxp45agDiEzN')
+// => 6PRSrLgB2Znxs8C7NgzeZgPLGV3xD3GrcAvoH7NMpVcMSpbrCTtrnj6zmT
+  
+bip38.decrypt('6PRSrLgB2Znxs8C7NgzeZgPLGV3xD3GrcAvoH7NMpVcMSpbrCTtrnj6zmT', 'qwerty')
+// => '5KYZdUEo39z3FPrtuX2QbbwGnNP5zTd7yyr2SC1j299sBCnWjss'
+```
