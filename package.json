@@ -38,17 +38,5 @@
     "jshint": "./node_modules/.bin/jshint --config jshint.json lib/*.js ; true",
     "test": "mocha --ui bdd",
     "unit": "./node_modules/.bin/mocha"
-  },
-  "testling": {
-    "files": "test/*.js",
-    "harness": "mocha",
-    "browsers": [
-      "android-browser/4.2..latest",
-      "chrome/latest",
-      "firefox/latest",
-      "ie/9..latest",
-      "iphone/6.0..latest",
-      "safari/6.0..latest"
-    ]
   }
 }
