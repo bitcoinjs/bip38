@@ -19,7 +19,7 @@ describe('bip38', function() {
     fixtures.invalid.forEach(function(f) {
       it('should throw ' + f.description, function() {
         assert.throws(function() {
-          bip38.decrypt(f.bip38, f.passphrase, f.address)
+          bip38.decrypt(f.bip38, f.passphrase)
         }, new RegExp(f.description, 'i'))
       })
     })
