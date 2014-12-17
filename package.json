@@ -19,7 +19,6 @@
   },
   "devDependencies": {
     "coveralls": "^2.10.0",
-    "crypto-browserify": "^2.1.8",
     "istanbul": "^0.2.11",
     "jshint": "2.5.1",
     "mocha": "^1.20.1",
@@ -28,9 +27,6 @@
   "repository": {
     "url": "git@github.com:cryptocoinjs/bip38.git",
     "type": "git"
-  },
-  "browser": {
-    "crypto": "crypto-browserify"
   },
   "scripts": {
     "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --reporter list test/*.js",
