@@ -1,3 +1,9 @@
+1.2.0 / 2015-01-05
+------------------
+- removed dependency upon `aes` package since Browserify now supports aes [Daniel Cousens](https://github.com/cryptocoinjs/bip38/pull/6)
+- removed `crypto-browserify` devDep and removed `browser` field from `package.json`; no longer necessary
+- added method `verify()` [Daniel Cousens](https://github.com/cryptocoinjs/bip38/pull/7)
+
 1.1.1 / 2014-09-19
 ------------------
 - bugfix: enforce zero padding [Daniel Cousens](https://github.com/cryptocoinjs/bip38/commit/e73598d0fc1d1b3c04c132c34053e96bec6bd201)
