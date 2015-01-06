@@ -9,6 +9,7 @@
     "cryptography",
     "litecoin"
   ],
+  "homepage": "http://cryptocoinjs.com/modules/currency/bip38/",
   "author": "JP Richardson",
   "dependencies": {
     "aes": "~0.1.0",
