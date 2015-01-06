@@ -1,7 +1,7 @@
 bip38
 =====
 
-[![build status](https://secure.travis-ci.org/cryptocoinjs/bip38.png)](http://travis-ci.org/cryptocoinjs/bip38)
+[![build status](https://secure.travis-ci.org/cryptocoinjs/bip38.svg)](http://travis-ci.org/cryptocoinjs/bip38)
 [![Coverage Status](https://img.shields.io/coveralls/cryptocoinjs/bip38.svg)](https://coveralls.io/r/cryptocoinjs/bip38)
 [![Version](http://img.shields.io/npm/v/bip38.svg)](https://www.npmjs.org/package/bip38)
 
