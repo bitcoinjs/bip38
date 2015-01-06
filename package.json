@@ -13,16 +13,16 @@
   "author": "JP Richardson",
   "dependencies": {
     "bigi": "^1.2.0",
-    "coinstring": "^2.0.0",
+    "coinstring": "^2.2.0",
     "ecurve": "^1.0.0",
-    "scryptsy": "^1.0.0"
+    "scryptsy": "^1.2.0"
   },
   "devDependencies": {
     "coveralls": "^2.10.0",
     "istanbul": "^0.2.11",
     "jshint": "2.5.1",
     "mocha": "^1.20.1",
-    "mochify": "^0.9.3"
+    "mochify": "^2.1.1"
   },
   "repository": {
     "url": "git@github.com:cryptocoinjs/bip38.git",
