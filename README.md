@@ -57,7 +57,7 @@ var privateKeyWif = '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR'
 var bip38 = new Bip38()
 
 // not necessary, as Bitcoin is supported by default
-bip38.version = {
+bip38.versions = {
 	private: 0x80, 
   public: 0x0
 }
