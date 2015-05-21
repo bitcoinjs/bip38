@@ -14,6 +14,7 @@
   "dependencies": {
     "bigi": "^1.2.0",
     "browserify-aes": "^1.0.1",
+    "buffer-xor": "^1.0.2",
     "coinstring": "^2.2.0",
     "create-hash": "^1.1.1",
     "ecurve": "^1.0.0",
