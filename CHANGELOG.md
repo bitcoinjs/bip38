@@ -1,3 +1,8 @@
+1.3.0 / 2015-06-04
+------------------
+- use `createHash` and `aes` directly. https://github.com/cryptocoinjs/bip38
+- JavaScript Standard Style
+
 1.2.0 / 2015-01-05
 ------------------
 - removed dependency upon `aes` package since Browserify now supports aes [Daniel Cousens](https://github.com/cryptocoinjs/bip38/pull/6)
