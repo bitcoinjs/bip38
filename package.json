@@ -23,10 +23,9 @@
   "devDependencies": {
     "coveralls": "^2.10.0",
     "istanbul": "^0.2.11",
-    "jshint": "2.5.1",
     "mocha": "^1.20.1",
     "mochify": "^2.1.1",
-    "standard": "4.x"
+    "standard": "^5.0.2"
   },
   "repository": {
     "url": "git@github.com:cryptocoinjs/bip38.git",
@@ -36,8 +35,8 @@
     "browser-test": "mochify --wd -R spec --timeout 100000",
     "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --reporter list test/*.js",
     "coveralls": "npm run-script coverage && node ./node_modules/.bin/coveralls < coverage/lcov.info",
-    "jshint": "./node_modules/.bin/jshint --config jshint.json lib/*.js ; true",
-    "test": "standard && mocha --ui bdd --timeout 120000",
-    "unit": "./node_modules/.bin/mocha"
+    "standard": "standard",
+    "test": "npm run standard && npm run unit",
+    "unit": "mocha --ui bdd --timeout 120000"
   }
 }
