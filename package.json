@@ -33,8 +33,8 @@
   },
   "scripts": {
     "browser-test": "mochify --wd -R spec --timeout 100000",
-    "coverage": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --reporter list test/*.js",
-    "coveralls": "npm run-script coverage && node ./node_modules/.bin/coveralls < coverage/lcov.info",
+    "coverage": "istanbul cover _mocha -- --reporter list test/*.js",
+    "coveralls": "npm run-script coverage && node coveralls < coverage/lcov.info",
     "standard": "standard",
     "test": "npm run standard && npm run unit",
     "unit": "mocha --ui bdd --timeout 120000"
