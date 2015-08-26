@@ -2,7 +2,7 @@
   "name": "bip38",
   "version": "1.3.0",
   "description": "BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys that is impervious to brute force attacks thus protecting the user.",
-  "main": "lib/bip38.js",
+  "main": "index.js",
   "keywords": [
     "bitcoin",
     "crypto",
