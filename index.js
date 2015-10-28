@@ -30,7 +30,7 @@ function Bip38 (versions) {
   }
 }
 
-Bip38.prototype.encryptRaw = function (buffer, compressed, passphrase, saltAddress) {
+Bip38.prototype.encryptRaw = function (buffer, compressed, passphrase, saltAddress, progressCallback) {
   assert.equal(buffer.length, 32, 'Invalid private key length')
 
   var secret = new Buffer(passphrase, 'utf8')
@@ -40,7 +40,7 @@ Bip38.prototype.encryptRaw = function (buffer, compressed, passphrase, saltAddre
   var r = this.scryptParams.r
   var p = this.scryptParams.p
 
-  var scryptBuf = scrypt(secret, salt, N, r, p, 64)
+  var scryptBuf = scrypt(secret, salt, N, r, p, 64, progressCallback)
   var derivedHalf1 = scryptBuf.slice(0, 32)
   var derivedHalf2 = scryptBuf.slice(32, 64)
 
@@ -61,7 +61,7 @@ Bip38.prototype.encryptRaw = function (buffer, compressed, passphrase, saltAddre
   return Buffer.concat([prefix, salt, cipherText])
 }
 
-Bip38.prototype.encrypt = function (wif, passphrase, saltAddress) {
+Bip38.prototype.encrypt = function (wif, passphrase, saltAddress, progressCallback) {
   var d = cs.decode(wif).slice(1)
   var compressed = (d.length === 33) && (d[32] === 0x01)
 
@@ -70,12 +70,12 @@ Bip38.prototype.encrypt = function (wif, passphrase, saltAddress) {
     d = d.slice(0, -1)
   }
 
-  return cs.encode(this.encryptRaw(d, compressed, passphrase, saltAddress))
+  return cs.encode(this.encryptRaw(d, compressed, passphrase, saltAddress, progressCallback))
 }
 
 // some of the techniques borrowed from: https://github.com/pointbiz/bitaddress.org
 // todo: (optimization) init buffer in advance, and use copy instead of concat
-Bip38.prototype.decryptRaw = function (encData, passphrase) {
+Bip38.prototype.decryptRaw = function (encData, passphrase, progressCallback) {
   // 39 bytes: 2 bytes prefix, 37 bytes payload
   assert.equal(encData.length, 39, 'Invalid BIP38 data length')
 
@@ -103,7 +103,7 @@ Bip38.prototype.decryptRaw = function (encData, passphrase) {
   var p = this.scryptParams.p
 
   var addresshash = encData.slice(3, 7)
-  var scryptBuf = scrypt(passphrase, addresshash, N, r, p, 64)
+  var scryptBuf = scrypt(passphrase, addresshash, N, r, p, 64, progressCallback)
   var derivedHalf1 = scryptBuf.slice(0, 32)
   var derivedHalf2 = scryptBuf.slice(32, 64)
 
@@ -121,9 +121,9 @@ Bip38.prototype.decryptRaw = function (encData, passphrase) {
   }
 }
 
-Bip38.prototype.decrypt = function (encryptedBase58, passphrase) {
+Bip38.prototype.decrypt = function (encryptedBase58, passphrase, progressCallback) {
   var encBuffer = cs.decode(encryptedBase58)
-  var decrypt = this.decryptRaw(encBuffer, passphrase)
+  var decrypt = this.decryptRaw(encBuffer, passphrase, progressCallback)
 
   // Convert to WIF
   var bufferLen = decrypt.compressed ? 34 : 33
@@ -139,7 +139,7 @@ Bip38.prototype.decrypt = function (encryptedBase58, passphrase) {
   return cs.encode(buffer)
 }
 
-Bip38.prototype.decryptECMult = function (encData, passphrase) {
+Bip38.prototype.decryptECMult = function (encData, passphrase, progressCallback) {
   passphrase = new Buffer(passphrase, 'utf8')
   encData = encData.slice(1) // FIXME: we can avoid this
 
@@ -167,7 +167,7 @@ Bip38.prototype.decryptECMult = function (encData, passphrase) {
   var N = this.scryptParams.N
   var r = this.scryptParams.r
   var p = this.scryptParams.p
-  var preFactor = scrypt(passphrase, ownerSalt, N, r, p, 32)
+  var preFactor = scrypt(passphrase, ownerSalt, N, r, p, 32, progressCallback)
 
   var passFactor
   if (hasLotSeq) {

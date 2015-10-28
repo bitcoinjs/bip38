@@ -15,14 +15,14 @@ describe('bip38', function () {
   describe('decrypt', function () {
     fixtures.valid.forEach(function (f) {
       it('should decrypt ' + f.description, function () {
-        assert.equal(bip38.decrypt(f.bip38, f.passphrase), f.wif)
+        assert.equal(bip38.decrypt(f.bip38, f.passphrase, function (data) { console.log(data) }), f.wif)
       })
     })
 
     fixtures.invalid.decrypt.forEach(function (f) {
       it('should throw ' + f.description, function () {
         assert.throws(function () {
-          bip38.decrypt(f.bip38, f.passphrase)
+          bip38.decrypt(f.bip38, f.passphrase, function (data) { console.log(data) })
         }, new RegExp(f.description, 'i'))
       })
     })
@@ -30,7 +30,7 @@ describe('bip38', function () {
     fixtures.invalid.verify.forEach(function (f) {
       it('should throw because ' + f.description, function () {
         assert.throws(function () {
-          bip38.decrypt(f.base58, 'foobar')
+          bip38.decrypt(f.base58, 'foobar', function (data) { console.log(data) })
         }, new RegExp(f.exception))
       })
     })
@@ -41,7 +41,7 @@ describe('bip38', function () {
       if (f.decryptOnly) return
 
       it('should encrypt ' + f.description, function () {
-        assert.equal(bip38.encrypt(f.wif, f.passphrase, f.address), f.bip38)
+        assert.equal(bip38.encrypt(f.wif, f.passphrase, f.address, function (data) { console.log(data) }), f.bip38)
       })
     })
   })
