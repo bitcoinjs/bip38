@@ -173,7 +173,6 @@ Bip38.prototype.decryptECMult = function (encData, passphrase, progressCallback)
   if (hasLotSeq) {
     var hashTarget = Buffer.concat([preFactor, ownerEntropy])
     passFactor = sha256x2(hashTarget)
-
   } else {
     passFactor = preFactor
   }
@@ -232,7 +231,6 @@ Bip38.prototype.verify = function (encryptedBase58) {
   // EC mult
   } else if (type === 0x43) {
     if ((flag & ~0x24)) return false
-
   } else {
     return false
   }
