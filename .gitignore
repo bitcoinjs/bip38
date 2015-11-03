@@ -1,1 +1,5 @@
+logs
+coverage
 node_modules
+*.rdb
+*.log
