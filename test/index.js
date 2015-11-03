@@ -5,8 +5,6 @@ var fixtures = require('./fixtures')
 /* global beforeEach, describe, it */
 
 describe('bip38', function () {
-  this.timeout(70000)
-
   var bip38
   beforeEach(function () {
     bip38 = new Bip38()
