@@ -8,3 +8,4 @@ node_js:
   - "4.2"
 after_success:
   - "npm run coveralls"
+sudo: false
