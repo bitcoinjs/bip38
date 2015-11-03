@@ -2,12 +2,9 @@ language: node_js
 before_install:
   - "npm install npm -g"
 node_js:
-env:
-  - TEST_SUITE=coveralls
-  - TEST_SUITE=standard
-  - TEST_SUITE=unit
-script: "npm run-script $TEST_SUITE"
   - "0.10"
   - "0.12"
   - "iojs"
   - "4.2"
+after_success:
+  - "npm run coveralls"
