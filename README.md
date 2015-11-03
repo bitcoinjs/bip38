@@ -82,9 +82,11 @@ bip38.scryptParams = {
 ```
 
 
-### encrypt(wif, passphrase, address)
+### encrypt(wif, passphrase, address, progressCallback)
 
 A method that encrypts the private key. `wif` is the string value of the wallet import format key. `passphrase` the passphrase to encrypt the key with. `address` is the public address.
+`progressCallback` is a function that receives an object in the form of: 
+{current: 1000, total: 262144, percent: 0.3814697265625}
 
 
 Returns the encrypted string.
@@ -97,15 +99,19 @@ var Bip38 = require('bip38')
 var privateKeyWif = '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR'
 
 var bip38 = new Bip38()
-var encrypted = bip38.encrypt(privateKeyWif, 'TestingOneTwoThree', "1Jq6MksXQVWzrznvZzxkV6oY57oWXD9TXB")
+var encrypted = bip38.encrypt(privateKeyWif, 'TestingOneTwoThree', "1Jq6MksXQVWzrznvZzxkV6oY57oWXD9TXB", function (status) {
+    console.log(status.percent) // Will print the precent every time current increases by 1000
+})
 console.log(encrypted) 
 // => 6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg
 ```
 
 
-### decrypt(encryptedKey, passhprase)
+### decrypt(encryptedKey, passhprase, progressCallback)
 
 A method that decrypts the encrypted string. `encryptedKey` is the string value of the encrypted key. `passphrase` is the passphrase to decrypt the key with.
+`progressCallback` is a function that receives an object in the form of: 
+{current: 1000, total: 262144, percent: 0.3814697265625}
 
 
 ```js
@@ -114,7 +120,9 @@ var Bip38 = require('bip38')
 var encryptedKey = '6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg'
 
 var bip38 = new Bip38()
-var privateKeyWif = bip38.decrypt(encryptedKey, 'TestingOneTwoThree')
+var privateKeyWif = bip38.decrypt(encryptedKey, 'TestingOneTwoThree', function (status) {
+    console.log(status.percent) // Will print the precent every time current increases by 1000
+})
 console.log(privateKeyWif) 
 // =>  '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR'
 ```
