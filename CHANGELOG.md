@@ -1,3 +1,7 @@
+1.4.0 / 2015-11-03
+------------------
+- added `progressCallback`. See: https://github.com/bitcoinjs/bip38/pull/16
+
 1.3.0 / 2015-06-04
 ------------------
 - use `createHash` and `aes` directly. https://github.com/cryptocoinjs/bip38
