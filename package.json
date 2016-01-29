@@ -28,7 +28,7 @@
     "standard": "^5.0.2"
   },
   "repository": {
-    "url": "git@github.com:cryptocoinjs/bip38.git",
+    "url": "git@github.com:bitcoinjs/bip38.git",
     "type": "git"
   },
   "scripts": {
