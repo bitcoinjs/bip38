@@ -7,7 +7,7 @@ var fixtures = require('./fixtures')
 var wif = require('wif')
 
 describe('bip38', function () {
-  this.timeout(70000)
+  this.timeout(200000)
 
   describe('decrypt', function () {
     fixtures.valid.forEach(function (f) {
