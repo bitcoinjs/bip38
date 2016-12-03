@@ -44,7 +44,7 @@ function encryptRaw (buffer, compressed, passphrase, progressCallback) {
   if (buffer.length !== 32) throw new Error('Invalid private key length')
 
   var d = BigInteger.fromBuffer(buffer)
-  var address = getAddress(d)
+  var address = getAddress(d, compressed)
   var secret = new Buffer(passphrase, 'utf8')
   var salt = hash256(address).slice(0, 4)
 
@@ -114,10 +114,10 @@ function decryptRaw (buffer, passphrase, progressCallback) {
   var privateKey = xor(plainText, derivedHalf1)
 
   // verify salt matches address
-//   var d = BigInteger.fromBuffer(privateKey)
-//   var address = getAddress(d)
-//   var checksum = hash256(address).slice(0, 4)
-//   assert.deepEqual(salt, checksum)
+  var d = BigInteger.fromBuffer(privateKey)
+  var address = getAddress(d, compressed)
+  var checksum = hash256(address).slice(0, 4)
+  assert.deepEqual(salt, checksum)
 
   return {
     privateKey: privateKey,
