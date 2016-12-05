@@ -80,7 +80,6 @@ function encrypt (buffer, compressed, passphrase, address, progressCallback, scr
 }
 
 // some of the techniques borrowed from: https://github.com/pointbiz/bitaddress.org
-// todo: (optimization) init buffer in advance, and use copy instead of concat
 function decryptRaw (buffer, passphrase, progressCallback, scryptParams) {
   // 39 bytes: 2 bytes prefix, 37 bytes payload
   if (buffer.length !== 39) throw new Error('Invalid BIP38 data length')
