@@ -40,17 +40,18 @@ function getAddress (d, compressed) {
   return bs58check.encode(payload)
 }
 
-function encryptRaw (buffer, compressed, passphrase, progressCallback) {
+function encryptRaw (buffer, compressed, passphrase, progressCallback, scryptParams) {
   if (buffer.length !== 32) throw new Error('Invalid private key length')
+  scryptParams = scryptParams || SCRYPT_PARAMS
 
   var d = BigInteger.fromBuffer(buffer)
   var address = getAddress(d, compressed)
   var secret = new Buffer(passphrase, 'utf8')
   var salt = hash256(address).slice(0, 4)
 
-  var N = SCRYPT_PARAMS.N
-  var r = SCRYPT_PARAMS.r
-  var p = SCRYPT_PARAMS.p
+  var N = scryptParams.N
+  var r = scryptParams.r
+  var p = scryptParams.p
 
   var scryptBuf = scrypt(secret, salt, N, r, p, 64, progressCallback)
   var derivedHalf1 = scryptBuf.slice(0, 32)
@@ -74,20 +75,21 @@ function encryptRaw (buffer, compressed, passphrase, progressCallback) {
   return result
 }
 
-function encrypt (buffer, compressed, passphrase, address, progressCallback) {
-  return bs58check.encode(encryptRaw(buffer, compressed, passphrase, address, progressCallback))
+function encrypt (buffer, compressed, passphrase, address, progressCallback, scryptParams) {
+  return bs58check.encode(encryptRaw(buffer, compressed, passphrase, address, progressCallback, scryptParams))
 }
 
 // some of the techniques borrowed from: https://github.com/pointbiz/bitaddress.org
 // todo: (optimization) init buffer in advance, and use copy instead of concat
-function decryptRaw (buffer, passphrase, progressCallback) {
+function decryptRaw (buffer, passphrase, progressCallback, scryptParams) {
   // 39 bytes: 2 bytes prefix, 37 bytes payload
   if (buffer.length !== 39) throw new Error('Invalid BIP38 data length')
   if (buffer.readUInt8(0) !== 0x01) throw new Error('Invalid BIP38 prefix')
+  scryptParams = scryptParams || SCRYPT_PARAMS
 
   // check if BIP38 EC multiply
   var type = buffer.readUInt8(1)
-  if (type === 0x43) return decryptECMult(buffer, passphrase, progressCallback)
+  if (type === 0x43) return decryptECMult(buffer, passphrase, progressCallback, scryptParams)
   if (type !== 0x42) throw new Error('Invalid BIP38 type')
 
   passphrase = new Buffer(passphrase, 'utf8')
@@ -96,9 +98,9 @@ function decryptRaw (buffer, passphrase, progressCallback) {
   var compressed = flagByte === 0xe0
   if (!compressed && flagByte !== 0xc0) throw new Error('Invalid BIP38 compression flag')
 
-  var N = SCRYPT_PARAMS.N
-  var r = SCRYPT_PARAMS.r
-  var p = SCRYPT_PARAMS.p
+  var N = scryptParams.N
+  var r = scryptParams.r
+  var p = scryptParams.p
 
   var salt = buffer.slice(3, 7)
   var scryptBuf = scrypt(passphrase, salt, N, r, p, 64, progressCallback)
@@ -125,13 +127,14 @@ function decryptRaw (buffer, passphrase, progressCallback) {
   }
 }
 
-function decrypt (string, passphrase, progressCallback) {
-  return decryptRaw(bs58check.decode(string), passphrase, progressCallback)
+function decrypt (string, passphrase, progressCallback, scryptParams) {
+  return decryptRaw(bs58check.decode(string), passphrase, progressCallback, scryptParams)
 }
 
-function decryptECMult (buffer, passphrase, progressCallback) {
+function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
   passphrase = new Buffer(passphrase, 'utf8')
   buffer = buffer.slice(1) // FIXME: we can avoid this
+  scryptParams = scryptParams || SCRYPT_PARAMS
 
   var flag = buffer.readUInt8(1)
   var compressed = (flag & 0x20) !== 0
@@ -155,9 +158,9 @@ function decryptECMult (buffer, passphrase, progressCallback) {
   var encryptedPart1 = buffer.slice(14, 22) // First 8 bytes
   var encryptedPart2 = buffer.slice(22, 38) // 16 bytes
 
-  var N = SCRYPT_PARAMS.N
-  var r = SCRYPT_PARAMS.r
-  var p = SCRYPT_PARAMS.p
+  var N = scryptParams.N
+  var r = scryptParams.r
+  var p = scryptParams.p
   var preFactor = scrypt(passphrase, ownerSalt, N, r, p, 32, progressCallback)
 
   var passFactor
