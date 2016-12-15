@@ -1,19 +1,20 @@
-var assert = require('assert')
-var Bip38 = require('../')
-var fixtures = require('./fixtures')
+/* global describe, it */
 
-/* global beforeEach, describe, it */
+var assert = require('assert')
+var bip38 = require('../')
+var bs58check = require('bs58check')
+var fixtures = require('./fixtures')
+var wif = require('wif')
 
 describe('bip38', function () {
-  var bip38
-  beforeEach(function () {
-    bip38 = new Bip38()
-  })
+  this.timeout(200000)
 
   describe('decrypt', function () {
     fixtures.valid.forEach(function (f) {
       it('should decrypt ' + f.description, function () {
-        assert.equal(bip38.decrypt(f.bip38, f.passphrase), f.wif)
+        var result = bip38.decrypt(f.bip38, f.passphrase)
+
+        assert.equal(wif.encode(0x80, result.privateKey, result.compressed), f.wif)
       })
     })
 
@@ -39,7 +40,9 @@ describe('bip38', function () {
       if (f.decryptOnly) return
 
       it('should encrypt ' + f.description, function () {
-        assert.equal(bip38.encrypt(f.wif, f.passphrase, f.address), f.bip38)
+        var buffer = bs58check.decode(f.wif)
+
+        assert.equal(bip38.encrypt(buffer.slice(1, 33), !!buffer[33], f.passphrase), f.bip38)
       })
     })
   })
