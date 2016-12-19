@@ -30,7 +30,7 @@ BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys 
 
 
 ### API
-### encrypt(buffer, compressed, passphrase, progressCallback)
+### encrypt(buffer, compressed, passphrase[, progressCallback, scryptParams])
 
 ``` javascript
 var bip38 = require('bip38')
@@ -45,7 +45,7 @@ console.log(encryptedKey)
 ```
 
 
-### decrypt(encryptedKey, passhprase, progressCallback)
+### decrypt(encryptedKey, passhprase[, progressCallback, scryptParams])
 
 ``` javascript
 var bip38 = require('bip38')
