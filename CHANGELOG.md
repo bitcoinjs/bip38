@@ -1,3 +1,7 @@
+2.0.0 / 2016-12-20
+------------------
+- removed class instantiation. Removed `coinstring` dep.
+
 1.4.0 / 2015-11-03
 ------------------
 - added `progressCallback`. See: https://github.com/bitcoinjs/bip38/pull/16
