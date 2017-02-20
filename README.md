@@ -50,8 +50,6 @@ console.log(encryptedKey)
 ``` javascript
 var bip38 = require('bip38')
 var encryptedKey = '6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg'
-
-var bip38 = new Bip38()
 var decryptedKey = bip38.decrypt(encryptedKey, 'TestingOneTwoThree', function (status) {
     console.log(status.percent) // will print the precent every time current increases by 1000
 })
