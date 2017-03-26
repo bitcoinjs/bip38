@@ -75,8 +75,8 @@ function encryptRaw (buffer, compressed, passphrase, progressCallback, scryptPar
   return result
 }
 
-function encrypt (buffer, compressed, passphrase, address, progressCallback, scryptParams) {
-  return bs58check.encode(encryptRaw(buffer, compressed, passphrase, address, progressCallback, scryptParams))
+function encrypt (buffer, compressed, passphrase, progressCallback, scryptParams) {
+  return bs58check.encode(encryptRaw(buffer, compressed, passphrase, progressCallback, scryptParams))
 }
 
 // some of the techniques borrowed from: https://github.com/pointbiz/bitaddress.org
