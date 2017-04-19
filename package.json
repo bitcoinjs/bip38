@@ -14,7 +14,7 @@
   "dependencies": {
     "bigi": "^1.2.0",
     "browserify-aes": "^1.0.1",
-    "bs58check": "^2.0.1",
+    "bs58check": "<3.0.0",
     "buffer-xor": "^1.0.2",
     "create-hash": "^1.1.1",
     "ecurve": "^1.0.0",
@@ -25,7 +25,7 @@
     "istanbul": "^0.2.11",
     "mocha": "^2.3.3",
     "mochify": "^2.1.1",
-    "standard": "^5.0.2",
+    "standard": "^9.0.2",
     "wif": "^2.0.1"
   },
   "repository": {
