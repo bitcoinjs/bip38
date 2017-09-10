@@ -1,9 +1,10 @@
 var aes = require('browserify-aes')
 var assert = require('assert')
+var Buffer = require('safe-buffer').Buffer
 var bs58check = require('bs58check')
 var createHash = require('create-hash')
 var scrypt = require('scryptsy')
-var xor = require('buffer-xor')
+var xor = require('buffer-xor/inplace')
 
 var ecurve = require('ecurve')
 var curve = ecurve.getCurveByName('secp256k1')
@@ -16,7 +17,7 @@ var SCRYPT_PARAMS = {
   r: 8,
   p: 8
 }
-var NULL = new Buffer(0)
+var NULL = Buffer.alloc(0)
 
 function hash160 (buffer) {
   return createHash('rmd160').update(
@@ -33,7 +34,7 @@ function hash256 (buffer) {
 function getAddress (d, compressed) {
   var Q = curve.G.multiply(d).getEncoded(compressed)
   var hash = hash160(Q)
-  var payload = new Buffer(21)
+  var payload = Buffer.allocUnsafe(21)
   payload.writeUInt8(0x00, 0) // XXX TODO FIXME bitcoin only??? damn you BIP38
   hash.copy(payload, 1)
 
@@ -46,7 +47,7 @@ function encryptRaw (buffer, compressed, passphrase, progressCallback, scryptPar
 
   var d = BigInteger.fromBuffer(buffer)
   var address = getAddress(d, compressed)
-  var secret = new Buffer(passphrase, 'utf8')
+  var secret = Buffer.from(passphrase, 'utf8')
   var salt = hash256(address).slice(0, 4)
 
   var N = scryptParams.N
@@ -57,7 +58,7 @@ function encryptRaw (buffer, compressed, passphrase, progressCallback, scryptPar
   var derivedHalf1 = scryptBuf.slice(0, 32)
   var derivedHalf2 = scryptBuf.slice(32, 64)
 
-  var xorBuf = xor(buffer, derivedHalf1)
+  var xorBuf = xor(derivedHalf1, buffer)
   var cipher = aes.createCipheriv('aes-256-ecb', derivedHalf2, NULL)
   cipher.setAutoPadding(false)
   cipher.end(xorBuf)
@@ -65,7 +66,7 @@ function encryptRaw (buffer, compressed, passphrase, progressCallback, scryptPar
   var cipherText = cipher.read()
 
   // 0x01 | 0x42 | flagByte | salt (4) | cipherText (32)
-  var result = new Buffer(7 + 32)
+  var result = Buffer.allocUnsafe(7 + 32)
   result.writeUInt8(0x01, 0)
   result.writeUInt8(0x42, 1)
   result.writeUInt8(compressed ? 0xe0 : 0xc0, 2)
@@ -91,7 +92,7 @@ function decryptRaw (buffer, passphrase, progressCallback, scryptParams) {
   if (type === 0x43) return decryptECMult(buffer, passphrase, progressCallback, scryptParams)
   if (type !== 0x42) throw new Error('Invalid BIP38 type')
 
-  passphrase = new Buffer(passphrase, 'utf8')
+  passphrase = Buffer.from(passphrase, 'utf8')
 
   var flagByte = buffer.readUInt8(2)
   var compressed = flagByte === 0xe0
@@ -112,7 +113,7 @@ function decryptRaw (buffer, passphrase, progressCallback, scryptParams) {
   decipher.end(privKeyBuf)
 
   var plainText = decipher.read()
-  var privateKey = xor(plainText, derivedHalf1)
+  var privateKey = xor(derivedHalf1, plainText)
 
   // verify salt matches address
   var d = BigInteger.fromBuffer(privateKey)
@@ -131,7 +132,7 @@ function decrypt (string, passphrase, progressCallback, scryptParams) {
 }
 
 function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
-  passphrase = new Buffer(passphrase, 'utf8')
+  passphrase = Buffer.from(passphrase, 'utf8')
   buffer = buffer.slice(1) // FIXME: we can avoid this
   scryptParams = scryptParams || SCRYPT_PARAMS
 
@@ -177,7 +178,7 @@ function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
   var derivedHalf1 = seedBPass.slice(0, 32)
   var derivedHalf2 = seedBPass.slice(32, 64)
 
-  var decipher = aes.createDecipheriv('aes-256-ecb', derivedHalf2, new Buffer(0))
+  var decipher = aes.createDecipheriv('aes-256-ecb', derivedHalf2, Buffer.alloc(0))
   decipher.setAutoPadding(false)
   decipher.end(encryptedPart2)
 
@@ -185,7 +186,7 @@ function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
   var tmp = xor(decryptedPart2, derivedHalf1.slice(16, 32))
   var seedBPart2 = tmp.slice(8, 16)
 
-  var decipher2 = aes.createDecipheriv('aes-256-ecb', derivedHalf2, new Buffer(0))
+  var decipher2 = aes.createDecipheriv('aes-256-ecb', derivedHalf2, Buffer.alloc(0))
   decipher2.setAutoPadding(false)
   decipher2.write(encryptedPart1) // first 8 bytes
   decipher2.end(tmp.slice(0, 8)) // last 8 bytes
