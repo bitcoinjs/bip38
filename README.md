@@ -25,9 +25,8 @@ BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys 
 ## Usage
 
 ### Installation
-
-    npm install --save bip38
-
+    
+    npm install --save bip38 wif
 
 ### API
 ### encrypt(buffer, compressed, passphrase[, progressCallback, scryptParams])
