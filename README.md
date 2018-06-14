@@ -45,7 +45,7 @@ console.log(encryptedKey)
 ```
 
 
-### decrypt(encryptedKey, passhprase[, progressCallback, scryptParams])
+### decrypt(encryptedKey, passphrase[, progressCallback, scryptParams])
 
 ``` javascript
 var bip38 = require('bip38')
