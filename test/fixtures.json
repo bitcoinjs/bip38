@@ -19,6 +19,28 @@
       "bip38": "6PYNKZ1EAgYgmQfmNVamxyXVWHzK5s6DGhwP4J5o44cvXdoY7sRzhtpUeo",
       "wif": "L44B5gGEpqEDRS9vVPz7QT35jcBG2r3CZwSwQ4fCewXAhAhqGVpP",
       "address": "164MQi977u9GUteHr4EPH27VkkdxmfCvGW",
+      "description": "with specified (BITCOIN) network / no EC multiply / compression #1",
+      "network": {
+        "private": 128,
+        "public": 0
+      }
+    },
+    {
+      "passphrase": "password",
+      "bip38": "6PYUdkYbzk9G1Khmf3pRZhcLzqtZJqt9ZnkFjVkYvi76FesXSfH2Q5jTrX",
+      "wif": "c4TkW4HHWNumqzhD8tqktx5Rgxmj7a848Us5fpkoBGEjkuqvxfjQ",
+      "address": "CJ7Msqva4HLvx2GyupMUz5usUB8UpBVEoW",
+      "description": "with custom (CITY) network / no EC multiply / compression #1",
+      "network": {
+        "private": 237,
+        "public": 28
+      }
+    },
+    {
+      "passphrase": "TestingOneTwoThree",
+      "bip38": "6PYNKZ1EAgYgmQfmNVamxyXVWHzK5s6DGhwP4J5o44cvXdoY7sRzhtpUeo",
+      "wif": "L44B5gGEpqEDRS9vVPz7QT35jcBG2r3CZwSwQ4fCewXAhAhqGVpP",
+      "address": "164MQi977u9GUteHr4EPH27VkkdxmfCvGW",
       "description": "no EC multiply / compression #1"
     },
     {

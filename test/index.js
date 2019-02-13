@@ -12,9 +12,9 @@ describe('bip38', function () {
   describe('decrypt', function () {
     fixtures.valid.forEach(function (f) {
       it('should decrypt ' + f.description, function () {
-        var result = bip38.decrypt(f.bip38, f.passphrase)
-
-        assert.equal(wif.encode(0x80, result.privateKey, result.compressed), f.wif)
+        var result = bip38.decrypt(f.bip38, f.passphrase, null, null, f.network)
+        var prefix = f.network ? f.network.private : 0x80
+        assert.equal(wif.encode(prefix, result.privateKey, result.compressed), f.wif)
       })
     })
 
@@ -42,7 +42,7 @@ describe('bip38', function () {
       it('should encrypt ' + f.description, function () {
         var buffer = bs58check.decode(f.wif)
 
-        assert.equal(bip38.encrypt(buffer.slice(1, 33), !!buffer[33], f.passphrase), f.bip38)
+        assert.equal(bip38.encrypt(buffer.slice(1, 33), !!buffer[33], f.passphrase, null, null, f.network), f.bip38)
       })
     })
   })
