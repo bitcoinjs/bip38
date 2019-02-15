@@ -10,7 +10,7 @@ A JavaScript component that adheres to the [BIP38](https://github.com/bitcoin/bi
 
 
 ## Why?
-BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys that is imprevious to brute force attacks thus protecting the user.
+BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys that is impervious to brute force attacks thus protecting the user.
 
 
 ## Package Info
