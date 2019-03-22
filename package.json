@@ -34,6 +34,7 @@
   },
   "scripts": {
     "browser-test": "mochify --wd -R spec --timeout 100000",
+    "ci:test": "npm run standard && npm run coveralls",
     "coverage": "istanbul cover _mocha -- --reporter list test/*.js",
     "coveralls": "npm run-script coverage && coveralls < coverage/lcov.info",
     "standard": "standard",
