@@ -1,3 +1,7 @@
+2.0.3 / 2019-05-22
+------------------
+- made compatible for Electron v4
+
 2.0.0 / 2016-12-20
 ------------------
 - removed class instantiation. Removed `coinstring` dep.
