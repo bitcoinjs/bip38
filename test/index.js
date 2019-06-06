@@ -60,7 +60,7 @@ describe('bip38', function () {
       it('should decrypt ' + f.description, async function () {
         var result = await bip38.decryptAsync(f.bip38, f.passphrase)
 
-        assert.equal(wif.encode(0x80, result.privateKey, result.compressed), f.wif)
+        assert.strictEqual(wif.encode(0x80, result.privateKey, result.compressed), f.wif)
       })
     })
 
@@ -88,7 +88,7 @@ describe('bip38', function () {
       it('should encrypt ' + f.description, async function () {
         var buffer = bs58check.decode(f.wif)
 
-        assert.equal(bip38.encrypt(buffer.slice(1, 33), !!buffer[33], f.passphrase), f.bip38)
+        assert.strictEqual(bip38.encrypt(buffer.slice(1, 33), !!buffer[33], f.passphrase), f.bip38)
       })
     })
   })
