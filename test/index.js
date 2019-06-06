@@ -88,7 +88,7 @@ describe('bip38', function () {
       it('should encrypt ' + f.description, async function () {
         var buffer = bs58check.decode(f.wif)
 
-        assert.strictEqual(bip38.encrypt(buffer.slice(1, 33), !!buffer[33], f.passphrase), f.bip38)
+        assert.strictEqual(await bip38.encryptAsync(buffer.slice(1, 33), !!buffer[33], f.passphrase), f.bip38)
       })
     })
   })
