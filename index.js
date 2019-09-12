@@ -53,7 +53,7 @@ function encryptRaw (buffer, compressed, passphrase, progressCallback, scryptPar
 
   var d = BigInteger.fromBuffer(buffer)
   var address = getAddress(d, compressed)
-  var secret = Buffer.from(passphrase, 'utf8')
+  var secret = Buffer.from(passphrase.normalize('NFC'), 'utf8')
   var salt = hash256(address).slice(0, 4)
 
   var N = scryptParams.N
@@ -98,7 +98,7 @@ function decryptRaw (buffer, passphrase, progressCallback, scryptParams) {
   if (type === 0x43) return decryptECMult(buffer, passphrase, progressCallback, scryptParams)
   if (type !== 0x42) throw new Error('Invalid BIP38 type')
 
-  passphrase = Buffer.from(passphrase, 'utf8')
+  passphrase = Buffer.from(passphrase.normalize('NFC'), 'utf8')
 
   var flagByte = buffer.readUInt8(2)
   var compressed = flagByte === 0xe0
@@ -138,7 +138,7 @@ function decrypt (string, passphrase, progressCallback, scryptParams) {
 }
 
 function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
-  passphrase = Buffer.from(passphrase, 'utf8')
+  passphrase = Buffer.from(passphrase.normalize('NFC'), 'utf8')
   buffer = buffer.slice(1) // FIXME: we can avoid this
   scryptParams = scryptParams || SCRYPT_PARAMS
 
