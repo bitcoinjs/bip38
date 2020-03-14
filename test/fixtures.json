@@ -15,6 +15,13 @@
       "description": "no EC multiply / no compression #2"
     },
     {
+      "passphrase": "\\u03D2\\u0301\\u{0000}\\u{00010400}\\u{0001F4A9}",
+      "bip38": "6PRW5o9FLp4gJDDVqJQKJFTpMvdsSGJxMYHtHaQBF3ooa8mwD69bapcDQn",
+      "wif": "5Jajm8eQ22H3pGWLEVCXyvND8dQZhiQhoLJNKjYXk9roUFTMSZ4",
+      "address": "16ktGzmfrurhbhi6JGqsMWf7TyqK9HNAeF",
+      "description": "no EC multiply / no compression #3"
+    },
+    {
       "passphrase": "TestingOneTwoThree",
       "bip38": "6PYNKZ1EAgYgmQfmNVamxyXVWHzK5s6DGhwP4J5o44cvXdoY7sRzhtpUeo",
       "wif": "L44B5gGEpqEDRS9vVPz7QT35jcBG2r3CZwSwQ4fCewXAhAhqGVpP",

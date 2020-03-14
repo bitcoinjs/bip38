@@ -20,7 +20,13 @@ var SCRYPT_PARAMS = {
 var NULL = Buffer.alloc(0)
 
 function hash160 (buffer) {
-  return createHash('rmd160').update(
+  var hash
+  try {
+    hash = createHash('rmd160')
+  } catch (e) {
+    hash = createHash('ripemd160')
+  }
+  return hash.update(
     createHash('sha256').update(buffer).digest()
   ).digest()
 }
@@ -47,7 +53,7 @@ function encryptRaw (buffer, compressed, passphrase, progressCallback, scryptPar
 
   var d = BigInteger.fromBuffer(buffer)
   var address = getAddress(d, compressed)
-  var secret = Buffer.from(passphrase, 'utf8')
+  var secret = Buffer.from(passphrase.normalize('NFC'), 'utf8')
   var salt = hash256(address).slice(0, 4)
 
   var N = scryptParams.N
@@ -92,7 +98,7 @@ function decryptRaw (buffer, passphrase, progressCallback, scryptParams) {
   if (type === 0x43) return decryptECMult(buffer, passphrase, progressCallback, scryptParams)
   if (type !== 0x42) throw new Error('Invalid BIP38 type')
 
-  passphrase = Buffer.from(passphrase, 'utf8')
+  passphrase = Buffer.from(passphrase.normalize('NFC'), 'utf8')
 
   var flagByte = buffer.readUInt8(2)
   var compressed = flagByte === 0xe0
@@ -119,7 +125,7 @@ function decryptRaw (buffer, passphrase, progressCallback, scryptParams) {
   var d = BigInteger.fromBuffer(privateKey)
   var address = getAddress(d, compressed)
   var checksum = hash256(address).slice(0, 4)
-  assert.deepEqual(salt, checksum)
+  assert.deepStrictEqual(salt, checksum)
 
   return {
     privateKey: privateKey,
@@ -132,7 +138,7 @@ function decrypt (string, passphrase, progressCallback, scryptParams) {
 }
 
 function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
-  passphrase = Buffer.from(passphrase, 'utf8')
+  passphrase = Buffer.from(passphrase.normalize('NFC'), 'utf8')
   buffer = buffer.slice(1) // FIXME: we can avoid this
   scryptParams = scryptParams || SCRYPT_PARAMS
 
@@ -140,7 +146,7 @@ function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
   var compressed = (flag & 0x20) !== 0
   var hasLotSeq = (flag & 0x04) !== 0
 
-  assert.equal((flag & 0x24), flag, 'Invalid private key.')
+  assert.strictEqual((flag & 0x24), flag, 'Invalid private key.')
 
   var addressHash = buffer.slice(2, 6)
   var ownerEntropy = buffer.slice(6, 14)

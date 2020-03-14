@@ -6,15 +6,23 @@ var bs58check = require('bs58check')
 var fixtures = require('./fixtures')
 var wif = require('wif')
 
+function replaceUnicode (str) {
+  var map = {
+    '\\u03D2\\u0301\\u{0000}\\u{00010400}\\u{0001F4A9}': '\u03D2\u0301\u{0000}\u{00010400}\u{0001F4A9}'
+  }
+  if (map[str]) str = map[str]
+  return str
+}
+
 describe('bip38', function () {
   this.timeout(200000)
 
   describe('decrypt', function () {
     fixtures.valid.forEach(function (f) {
       it('should decrypt ' + f.description, function () {
-        var result = bip38.decrypt(f.bip38, f.passphrase)
+        var result = bip38.decrypt(f.bip38, replaceUnicode(f.passphrase))
 
-        assert.equal(wif.encode(0x80, result.privateKey, result.compressed), f.wif)
+        assert.strictEqual(wif.encode(0x80, result.privateKey, result.compressed), f.wif)
       })
     })
 
@@ -42,7 +50,7 @@ describe('bip38', function () {
       it('should encrypt ' + f.description, function () {
         var buffer = bs58check.decode(f.wif)
 
-        assert.equal(bip38.encrypt(buffer.slice(1, 33), !!buffer[33], f.passphrase), f.bip38)
+        assert.strictEqual(bip38.encrypt(buffer.slice(1, 33), !!buffer[33], replaceUnicode(f.passphrase)), f.bip38)
       })
     })
   })
