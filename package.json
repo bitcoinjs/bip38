@@ -1,6 +1,6 @@
 {
   "name": "bip38",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys that is impervious to brute force attacks thus protecting the user.",
   "main": "index.js",
   "keywords": [
@@ -18,14 +18,14 @@
     "buffer-xor": "^1.0.2",
     "create-hash": "^1.1.1",
     "ecurve": "^1.0.0",
-    "scryptsy": "^2.0.0"
+    "scryptsy": "^2.1.0"
   },
   "devDependencies": {
-    "coveralls": "^3.0.9",
-    "istanbul": "^0.4.5",
-    "mocha": "^7.1.1",
-    "mochify": "^6.6.0",
-    "standard": "^14.3.3",
+    "coveralls": "^3.0.4",
+    "mocha": "^6.1.4",
+    "mochify": "^6.2.0",
+    "nyc": "^14.1.1",
+    "standard": "^12.0.1",
     "wif": "^2.0.1"
   },
   "repository": {
@@ -35,7 +35,7 @@
   "scripts": {
     "browser-test": "mochify --wd -R spec --timeout 100000",
     "ci:test": "npm run standard && npm run coveralls",
-    "coverage": "istanbul cover _mocha -- --reporter list test/*.js",
+    "coverage": "nyc --check-coverage --reporter=lcov --reporter=text mocha",
     "coveralls": "npm run-script coverage && coveralls < coverage/lcov.info",
     "standard": "standard",
     "test": "npm run standard && npm run unit",

@@ -1,5 +1,6 @@
 logs
 coverage
+.nyc_output
 node_modules
 *.rdb
 *.log
