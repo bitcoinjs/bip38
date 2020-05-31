@@ -1,6 +1,28 @@
+3.1.1 / 2020-05-31
+------------------
+- Add safe-buffer as explicit dependency
+
+3.1.0 / 2020-04-09
+------------------
+- Add async methods
+
+3.0.0 / 2019-09-12
+------------------
+- Fixed backwards incompatible bug with passphrase NFC normalization
+
 2.0.3 / 2019-05-22
 ------------------
 - made compatible for Electron v4
+
+2.0.2 / 2017-12-14
+------------------
+- use safe-buffer
+- upgrade scryptsy
+
+2.0.1 / 2017-04-20
+------------------
+- upgrade bs58check
+- index: rm unused address parameter
 
 2.0.0 / 2016-12-20
 ------------------
