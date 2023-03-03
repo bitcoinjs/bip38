@@ -2,7 +2,8 @@ var aes = require('browserify-aes')
 var assert = require('assert')
 var Buffer = require('safe-buffer').Buffer
 var bs58check = require('bs58check')
-var createHash = require('create-hash')
+var { sha256 } = require('@noble/hashes/sha256')
+var { ripemd160 } = require('@noble/hashes/ripemd160')
 var scrypt = require('scryptsy')
 var xor = require('buffer-xor/inplace')
 
@@ -20,21 +21,18 @@ var SCRYPT_PARAMS = {
 var NULL = Buffer.alloc(0)
 
 function hash160 (buffer) {
-  var hash
-  try {
-    hash = createHash('rmd160')
-  } catch (e) {
-    hash = createHash('ripemd160')
-  }
-  return hash.update(
-    createHash('sha256').update(buffer).digest()
+  var hash = ripemd160.create()
+  var uint8Arr = hash.update(
+    sha256.create().update(buffer).digest()
   ).digest()
+  return Buffer.from(uint8Arr)
 }
 
 function hash256 (buffer) {
-  return createHash('sha256').update(
-    createHash('sha256').update(buffer).digest()
+  var uint8Arr = sha256.create().update(
+    sha256.create().update(buffer).digest()
   ).digest()
+  return Buffer.from(uint8Arr)
 }
 
 function getAddress (d, compressed) {
@@ -213,11 +211,11 @@ function decryptRaw (buffer, passphrase, progressCallback, scryptParams) {
 }
 
 async function decryptAsync (string, passphrase, progressCallback, scryptParams, promiseInterval) {
-  return decryptRawAsync(bs58check.decode(string), passphrase, progressCallback, scryptParams, promiseInterval)
+  return decryptRawAsync(Buffer.from(bs58check.decode(string)), passphrase, progressCallback, scryptParams, promiseInterval)
 }
 
 function decrypt (string, passphrase, progressCallback, scryptParams) {
-  return decryptRaw(bs58check.decode(string), passphrase, progressCallback, scryptParams)
+  return decryptRaw(Buffer.from(bs58check.decode(string)), passphrase, progressCallback, scryptParams)
 }
 
 function prepareDecryptECMult (buffer, passphrase, progressCallback, scryptParams) {
@@ -363,8 +361,10 @@ function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
 }
 
 function verify (string) {
-  var decoded = bs58check.decodeUnsafe(string)
-  if (!decoded) return false
+  var unsafe = bs58check.decodeUnsafe(string)
+  if (!unsafe) return false
+
+  var decoded = Buffer.from(unsafe)
 
   if (decoded.length !== 39) return false
   if (decoded.readUInt8(0) !== 0x01) return false
