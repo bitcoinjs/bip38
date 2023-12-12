@@ -1,7 +1,5 @@
-// var aes = require('browserify-aes')
 var aes = require('@noble/ciphers/aes');
 var assert = require('assert')
-var Buffer = require('safe-buffer').Buffer
 var bs58check = require('bs58check')
 var createHash = require('create-hash')
 var scrypt = require('scryptsy')
