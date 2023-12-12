@@ -1,4 +1,5 @@
-var aes = require('browserify-aes')
+// var aes = require('browserify-aes')
+var aes = require('@noble/ciphers/aes');
 var assert = require('assert')
 var Buffer = require('safe-buffer').Buffer
 var bs58check = require('bs58check')
@@ -68,27 +69,27 @@ function prepareEncryptRaw (buffer, compressed, passphrase, scryptParams) {
   }
 }
 
-function finishEncryptRaw (buffer, compressed, salt, scryptBuf) {
-  var derivedHalf1 = scryptBuf.slice(0, 32)
-  var derivedHalf2 = scryptBuf.slice(32, 64)
 
-  var xorBuf = xor(derivedHalf1, buffer)
-  var cipher = aes.createCipheriv('aes-256-ecb', derivedHalf2, NULL)
-  cipher.setAutoPadding(false)
-  cipher.end(xorBuf)
+function finishEncryptRaw(buffer, compressed, salt, scryptBuf) {
+  var derivedHalf1 = scryptBuf.slice(0, 32);
+  var derivedHalf2 = scryptBuf.slice(32, 64);
 
-  var cipherText = cipher.read()
+  var xorBuf = xor(derivedHalf1, buffer);
+
+  var stream = aes.ecb(derivedHalf2, { disablePadding: true });
+  var cipherText = stream.encrypt(xorBuf);
 
   // 0x01 | 0x42 | flagByte | salt (4) | cipherText (32)
-  var result = Buffer.allocUnsafe(7 + 32)
-  result.writeUInt8(0x01, 0)
-  result.writeUInt8(0x42, 1)
-  result.writeUInt8(compressed ? 0xe0 : 0xc0, 2)
-  salt.copy(result, 3)
-  cipherText.copy(result, 7)
+  var result = Buffer.allocUnsafe(7 + cipherText.length);
+  result.writeUInt8(0x01, 0);
+  result.writeUInt8(0x42, 1);
+  result.writeUInt8(compressed ? 0xe0 : 0xc0, 2);
+  salt.copy(result, 3);
+  Buffer.from(cipherText).copy(result, 7);
 
-  return result
+  return result;
 }
+
 
 async function encryptRawAsync (buffer, compressed, passphrase, progressCallback, scryptParams, promiseInterval) {
   scryptParams = scryptParams || SCRYPT_PARAMS
@@ -156,29 +157,29 @@ function prepareDecryptRaw (buffer, progressCallback, scryptParams) {
   }
 }
 
-function finishDecryptRaw (buffer, salt, compressed, scryptBuf) {
-  var derivedHalf1 = scryptBuf.slice(0, 32)
-  var derivedHalf2 = scryptBuf.slice(32, 64)
 
-  var privKeyBuf = buffer.slice(7, 7 + 32)
-  var decipher = aes.createDecipheriv('aes-256-ecb', derivedHalf2, NULL)
-  decipher.setAutoPadding(false)
-  decipher.end(privKeyBuf)
+function finishDecryptRaw(buffer, salt, compressed, scryptBuf) {
+  var derivedHalf1 = scryptBuf.slice(0, 32);
+  var derivedHalf2 = scryptBuf.slice(32, 64);
 
-  var plainText = decipher.read()
-  var privateKey = xor(derivedHalf1, plainText)
+  var privKeyBuf = Buffer.from(buffer.slice(7, 7 + 32));
+  var stream = aes.ecb(derivedHalf2, { disablePadding: true });
+  var plainText = stream.decrypt(privKeyBuf);
+
+  var privateKey = xor(derivedHalf1, plainText);
 
   // verify salt matches address
-  var d = BigInteger.fromBuffer(privateKey)
-  var address = getAddress(d, compressed)
-  var checksum = hash256(address).slice(0, 4)
-  assert.deepStrictEqual(salt, checksum)
+  var d = BigInteger.fromBuffer(privateKey);
+  var address = getAddress(d, compressed);
+  var checksum = hash256(address).slice(0, 4);
+  assert.deepStrictEqual(salt, checksum);
 
   return {
     privateKey: privateKey,
     compressed: compressed
-  }
+  };
 }
+
 
 async function decryptRawAsync (buffer, passphrase, progressCallback, scryptParams, promiseInterval) {
   scryptParams = scryptParams || SCRYPT_PARAMS
@@ -275,35 +276,31 @@ function getPassIntAndPoint (preFactor, ownerEntropy, hasLotSeq) {
   }
 }
 
-function finishDecryptECMult (seedBPass, encryptedPart1, encryptedPart2, passInt, compressed) {
-  var derivedHalf1 = seedBPass.slice(0, 32)
-  var derivedHalf2 = seedBPass.slice(32, 64)
 
-  var decipher = aes.createDecipheriv('aes-256-ecb', derivedHalf2, Buffer.alloc(0))
-  decipher.setAutoPadding(false)
-  decipher.end(encryptedPart2)
+function finishDecryptECMult(seedBPass, encryptedPart1, encryptedPart2, passInt, compressed) {
+  var derivedHalf1 = seedBPass.slice(0, 32);
+  var derivedHalf2 = seedBPass.slice(32, 64);
 
-  var decryptedPart2 = decipher.read()
-  var tmp = xor(decryptedPart2, derivedHalf1.slice(16, 32))
-  var seedBPart2 = tmp.slice(8, 16)
+  var stream = aes.ecb(derivedHalf2, { disablePadding: true });
 
-  var decipher2 = aes.createDecipheriv('aes-256-ecb', derivedHalf2, Buffer.alloc(0))
-  decipher2.setAutoPadding(false)
-  decipher2.write(encryptedPart1) // first 8 bytes
-  decipher2.end(tmp.slice(0, 8)) // last 8 bytes
+  var decryptedPart2 = stream.decrypt(encryptedPart2);
+  var tmp = xor(decryptedPart2, derivedHalf1.slice(16, 32));
+  var seedBPart2 = tmp.slice(8, 16);
 
-  var seedBPart1 = xor(decipher2.read(), derivedHalf1.slice(0, 16))
-  var seedB = Buffer.concat([seedBPart1, seedBPart2], 24)
-  var factorB = BigInteger.fromBuffer(hash256(seedB))
+  // Reusing the stream for the second part of decryption
+  var seedBPart1 = xor(stream.decrypt(Buffer.concat([encryptedPart1, tmp.slice(0, 8)])), derivedHalf1.slice(0, 16));
+  var seedB = Buffer.concat([seedBPart1, seedBPart2], 24);
+  var factorB = BigInteger.fromBuffer(hash256(seedB));
 
   // d = passFactor * factorB (mod n)
-  var d = passInt.multiply(factorB).mod(curve.n)
+  var d = passInt.multiply(factorB).mod(curve.n);
 
   return {
     privateKey: d.toBuffer(32),
     compressed: compressed
-  }
+  };
 }
+
 
 async function decryptECMultAsync (buffer, passphrase, progressCallback, scryptParams, promiseInterval) {
   buffer = buffer.slice(1) // FIXME: we can avoid this

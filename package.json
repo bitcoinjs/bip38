@@ -12,6 +12,7 @@
   "homepage": "http://cryptocoinjs.com/modules/currency/bip38/",
   "author": "JP Richardson",
   "dependencies": {
+    "@noble/ciphers": "^0.4.1",
     "bigi": "^1.2.0",
     "browserify-aes": "^1.0.1",
     "bs58check": "<3.0.0",
