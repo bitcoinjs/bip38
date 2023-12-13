@@ -1,6 +1,5 @@
 var aes = require('@noble/ciphers/aes')
 var assert = require('assert')
-var createHash = require('create-hash')
 var scrypt = require('scryptsy')
 var xor = require('buffer-xor/inplace')
 var { secp256k1 } = require('@noble/curves/secp256k1')
