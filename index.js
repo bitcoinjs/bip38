@@ -1,12 +1,13 @@
 var aes = require('@noble/ciphers/aes')
 var assert = require('assert')
-var bs58check = require('bs58check')
 var createHash = require('create-hash')
 var scrypt = require('scryptsy')
 var xor = require('buffer-xor/inplace')
 var { secp256k1 } = require('@noble/curves/secp256k1')
-
+var { sha256 } = require('@noble/hashes/sha256')
+var { createBase58check } = require('@scure/base')
 var BigInteger = require('bigi')
+var bs58check = createBase58check(sha256)
 
 // constants
 var SCRYPT_PARAMS = {
@@ -42,7 +43,7 @@ function getAddress (d, compressed) {
   payload.writeUInt8(0x00, 0) // Bitcoin version byte
   hash.copy(payload, 1)
 
-  return bs58check.encode(payload)
+  return bs58check.encode(payload);
 }
 
 function prepareEncryptRaw (buffer, compressed, passphrase, scryptParams) {
@@ -127,6 +128,8 @@ function encrypt (buffer, compressed, passphrase, progressCallback, scryptParams
 }
 
 function prepareDecryptRaw (buffer, progressCallback, scryptParams) {
+  buffer = Buffer.from(buffer);
+
   // 39 bytes: 2 bytes prefix, 37 bytes payload
   if (buffer.length !== 39) throw new Error('Invalid BIP38 data length')
   if (buffer.readUInt8(0) !== 0x01) throw new Error('Invalid BIP38 prefix')
@@ -196,6 +199,7 @@ async function decryptRawAsync (buffer, passphrase, progressCallback, scryptPara
 
 // some of the techniques borrowed from: https://github.com/pointbiz/bitaddress.org
 function decryptRaw (buffer, passphrase, progressCallback, scryptParams) {
+  Buffer.from(buffer);
   scryptParams = scryptParams || SCRYPT_PARAMS
   const {
     salt,
@@ -357,7 +361,7 @@ function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
 }
 
 function verify (string) {
-  var decoded = bs58check.decodeUnsafe(string)
+  var decoded = bs58check.decode(string)
   if (!decoded) return false
 
   if (decoded.length !== 39) return false
