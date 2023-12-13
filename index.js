@@ -1,6 +1,6 @@
 var aes = require('@noble/ciphers/aes')
 var assert = require('assert')
-var scrypt = require('scryptsy')
+var { scrypt, scryptAsync } = require('@noble/hashes/scrypt')
 var xor = require('buffer-xor/inplace')
 var { secp256k1 } = require('@noble/curves/secp256k1')
 var { sha256 } = require('@noble/hashes/sha256')
@@ -79,7 +79,7 @@ function finishEncryptRaw(buffer, compressed, salt, scryptBuf) {
 }
 
 
-async function encryptRawAsync (buffer, compressed, passphrase, progressCallback, scryptParams, promiseInterval) {
+async function encryptRawAsync (buffer, compressed, passphrase, onProgress, scryptParams) {
   scryptParams = scryptParams || SCRYPT_PARAMS
   const {
     secret,
@@ -89,12 +89,12 @@ async function encryptRawAsync (buffer, compressed, passphrase, progressCallback
     p
   } = prepareEncryptRaw(buffer, compressed, passphrase, scryptParams)
 
-  var scryptBuf = await scrypt.async(secret, salt, N, r, p, 64, progressCallback, promiseInterval)
+  var scryptBuf = Buffer.from(await scryptAsync(secret, salt, { N, r, p, dkLen: 64, onProgress}))
 
   return finishEncryptRaw(buffer, compressed, salt, scryptBuf)
 }
 
-function encryptRaw (buffer, compressed, passphrase, progressCallback, scryptParams) {
+function encryptRaw (buffer, compressed, passphrase, onProgress, scryptParams) {
   scryptParams = scryptParams || SCRYPT_PARAMS
   const {
     secret,
@@ -104,20 +104,20 @@ function encryptRaw (buffer, compressed, passphrase, progressCallback, scryptPar
     p
   } = prepareEncryptRaw(buffer, compressed, passphrase, scryptParams)
 
-  var scryptBuf = scrypt(secret, salt, N, r, p, 64, progressCallback)
+  var scryptBuf = scrypt(secret, salt, { N, r, p, dkLen: 64, onProgress })
 
   return finishEncryptRaw(buffer, compressed, salt, scryptBuf)
 }
 
-async function encryptAsync (buffer, compressed, passphrase, progressCallback, scryptParams, promiseInterval) {
-  return bs58check.encode(await encryptRawAsync(buffer, compressed, passphrase, progressCallback, scryptParams, promiseInterval))
+async function encryptAsync (buffer, compressed, passphrase, onProgress, scryptParams) {
+  return bs58check.encode(await encryptRawAsync(buffer, compressed, passphrase, onProgress, scryptParams))
 }
 
-function encrypt (buffer, compressed, passphrase, progressCallback, scryptParams) {
-  return bs58check.encode(encryptRaw(buffer, compressed, passphrase, progressCallback, scryptParams))
+function encrypt (buffer, compressed, passphrase, onProgress, scryptParams) {
+  return bs58check.encode(encryptRaw(buffer, compressed, passphrase, onProgress, scryptParams))
 }
 
-function prepareDecryptRaw (buffer, progressCallback, scryptParams) {
+function prepareDecryptRaw (buffer, onProgress, scryptParams) {
   buffer = Buffer.from(buffer);
 
   // 39 bytes: 2 bytes prefix, 37 bytes payload
@@ -171,7 +171,7 @@ function finishDecryptRaw(buffer, salt, compressed, scryptBuf) {
 }
 
 
-async function decryptRawAsync (buffer, passphrase, progressCallback, scryptParams, promiseInterval) {
+async function decryptRawAsync (buffer, passphrase, onProgress, scryptParams) {
   scryptParams = scryptParams || SCRYPT_PARAMS
   const {
     salt,
@@ -180,15 +180,15 @@ async function decryptRawAsync (buffer, passphrase, progressCallback, scryptPara
     r,
     p,
     decryptEC
-  } = prepareDecryptRaw(buffer, progressCallback, scryptParams)
-  if (decryptEC === true) return decryptECMultAsync(buffer, passphrase, progressCallback, scryptParams, promiseInterval)
+  } = prepareDecryptRaw(buffer, onProgress, scryptParams)
+  if (decryptEC === true) return decryptECMultAsync(buffer, passphrase, onProgress, scryptParams)
 
-  var scryptBuf = await scrypt.async(passphrase.normalize('NFC'), salt, N, r, p, 64, progressCallback, promiseInterval)
+  var scryptBuf = await scryptAsync(passphrase.normalize('NFC'), salt, { N, r, p, dkLen: 64, onProgress })
   return finishDecryptRaw(buffer, salt, compressed, scryptBuf)
 }
 
 // some of the techniques borrowed from: https://github.com/pointbiz/bitaddress.org
-function decryptRaw (buffer, passphrase, progressCallback, scryptParams) {
+function decryptRaw (buffer, passphrase, onProgress, scryptParams) {
   Buffer.from(buffer);
   scryptParams = scryptParams || SCRYPT_PARAMS
   const {
@@ -198,21 +198,21 @@ function decryptRaw (buffer, passphrase, progressCallback, scryptParams) {
     r,
     p,
     decryptEC
-  } = prepareDecryptRaw(buffer, progressCallback, scryptParams)
-  if (decryptEC === true) return decryptECMult(buffer, passphrase, progressCallback, scryptParams)
-  var scryptBuf = scrypt(passphrase.normalize('NFC'), salt, N, r, p, 64, progressCallback)
+  } = prepareDecryptRaw(buffer, onProgress, scryptParams)
+  if (decryptEC === true) return decryptECMult(buffer, passphrase, onProgress, scryptParams)
+  var scryptBuf = scrypt(passphrase.normalize('NFC'), salt, { N, r, p, dkLen: 64, onProgress })
   return finishDecryptRaw(buffer, salt, compressed, scryptBuf)
 }
 
-async function decryptAsync (string, passphrase, progressCallback, scryptParams, promiseInterval) {
-  return decryptRawAsync(bs58check.decode(string), passphrase, progressCallback, scryptParams, promiseInterval)
+async function decryptAsync (string, passphrase, onProgress, scryptParams) {
+  return decryptRawAsync(bs58check.decode(string), passphrase, onProgress, scryptParams)
 }
 
-function decrypt (string, passphrase, progressCallback, scryptParams) {
-  return decryptRaw(bs58check.decode(string), passphrase, progressCallback, scryptParams)
+function decrypt (string, passphrase, onProgress, scryptParams) {
+  return decryptRaw(bs58check.decode(string), passphrase, onProgress, scryptParams)
 }
 
-function prepareDecryptECMult (buffer, passphrase, progressCallback, scryptParams) {
+function prepareDecryptECMult (buffer, passphrase, onProgress, scryptParams) {
   var flag = buffer.readUInt8(1)
   var compressed = (flag & 0x20) !== 0
   var hasLotSeq = (flag & 0x04) !== 0
@@ -293,7 +293,7 @@ function finishDecryptECMult(seedBPass, encryptedPart1, encryptedPart2, passInt,
 }
 
 
-async function decryptECMultAsync (buffer, passphrase, progressCallback, scryptParams, promiseInterval) {
+async function decryptECMultAsync (buffer, passphrase, onProgress, scryptParams) {
   buffer = buffer.slice(1) // FIXME: we can avoid this
   passphrase = Buffer.from(passphrase.normalize('NFC'), 'utf8')
   scryptParams = scryptParams || SCRYPT_PARAMS
@@ -308,21 +308,21 @@ async function decryptECMultAsync (buffer, passphrase, progressCallback, scryptP
     N,
     r,
     p
-  } = prepareDecryptECMult(buffer, passphrase, progressCallback, scryptParams)
+  } = prepareDecryptECMult(buffer, passphrase, onProgress, scryptParams)
 
-  var preFactor = await scrypt.async(passphrase, ownerSalt, N, r, p, 32, progressCallback, promiseInterval)
+  var preFactor = await scryptAsync(passphrase, ownerSalt, { N, r, p, dkLen: 32, onProgress })
 
   const {
     passInt,
     passPoint
   } = getPassIntAndPoint(preFactor, ownerEntropy, hasLotSeq)
 
-  var seedBPass = await scrypt.async(passPoint, Buffer.concat([addressHash, ownerEntropy]), 1024, 1, 1, 64, undefined, promiseInterval)
+  var seedBPass = await scryptAsync(passPoint, Buffer.concat([addressHash, ownerEntropy]), { N: 1024, r: 1, p: 1, dkLen: 64 })
 
   return finishDecryptECMult(seedBPass, encryptedPart1, encryptedPart2, passInt, compressed)
 }
 
-function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
+function decryptECMult (buffer, passphrase, onProgress, scryptParams) {
   buffer = buffer.slice(1) // FIXME: we can avoid this
   passphrase = Buffer.from(passphrase.normalize('NFC'), 'utf8')
   scryptParams = scryptParams || SCRYPT_PARAMS
@@ -337,15 +337,15 @@ function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
     N,
     r,
     p
-  } = prepareDecryptECMult(buffer, passphrase, progressCallback, scryptParams)
-  var preFactor = scrypt(passphrase, ownerSalt, N, r, p, 32, progressCallback)
+  } = prepareDecryptECMult(buffer, passphrase, onProgress, scryptParams)
+  var preFactor = scrypt(passphrase, ownerSalt, { N, r, p, dkLen: 32, onProgress })
 
   const {
     passInt,
     passPoint
   } = getPassIntAndPoint(preFactor, ownerEntropy, hasLotSeq)
 
-  var seedBPass = scrypt(passPoint, Buffer.concat([addressHash, ownerEntropy]), 1024, 1, 1, 64)
+  var seedBPass = scrypt(passPoint, Buffer.concat([addressHash, ownerEntropy]), { N: 1024, r: 1, p: 1, dkLen: 64 })
 
   return finishDecryptECMult(seedBPass, encryptedPart1, encryptedPart2, passInt, compressed)
 }
