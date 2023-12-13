@@ -5,6 +5,7 @@ var scrypt = require('scryptsy')
 var xor = require('buffer-xor/inplace')
 var { secp256k1 } = require('@noble/curves/secp256k1')
 var { sha256 } = require('@noble/hashes/sha256')
+var { ripemd160 } = require('@noble/hashes/ripemd160')
 var { createBase58check } = require('@scure/base')
 var BigInteger = require('bigi')
 var bs58check = createBase58check(sha256)
@@ -18,32 +19,22 @@ var SCRYPT_PARAMS = {
 var NULL = Buffer.alloc(0)
 
 function hash160 (buffer) {
-  var hash
-  try {
-    hash = createHash('rmd160')
-  } catch (e) {
-    hash = createHash('ripemd160')
-  }
-  return hash.update(
-    createHash('sha256').update(buffer).digest()
-  ).digest()
+  return Buffer.from(ripemd160(sha256(buffer)))
 }
 
 function hash256 (buffer) {
-  return createHash('sha256').update(
-    createHash('sha256').update(buffer).digest()
-  ).digest()
+  return Buffer.from(sha256(sha256(buffer)))
 }
 
 function getAddress (d, compressed) {
-  const dBigInt = BigInt('0x' + d.toString(16));
-  const Q = secp256k1.getPublicKey(dBigInt);
+  const dBigInt = BigInt('0x' + d.toString(16))
+  const Q = secp256k1.getPublicKey(dBigInt)
   const hash = hash160(Q)
   const payload = Buffer.allocUnsafe(21)
   payload.writeUInt8(0x00, 0) // Bitcoin version byte
   hash.copy(payload, 1)
 
-  return bs58check.encode(payload);
+  return bs58check.encode(payload)
 }
 
 function prepareEncryptRaw (buffer, compressed, passphrase, scryptParams) {
