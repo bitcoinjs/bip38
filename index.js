@@ -32,8 +32,7 @@ function hash256(buffer) {
 }
 
 function getAddress(d, compressed) {
-  const dBigInt = BigInt('0x' + d.toString(16));
-  const Q = secp256k1.getPublicKey(dBigInt);
+  const Q = secp256k1.getPublicKey(d);
   const hash = hash160(Q);
   const payload = Buffer.allocUnsafe(21);
   payload.writeUInt8(0x00, 0); // Bitcoin version byte
@@ -45,8 +44,7 @@ function getAddress(d, compressed) {
 function prepareEncryptRaw(buffer, compressed, passphrase, scryptParams) {
   if (buffer.length !== 32) throw new Error('Invalid private key length');
 
-  var d = BigInt('0x' + buffer.toString('hex'));
-  var address = getAddress(d, compressed);
+  var address = getAddress(buffer, compressed);
   var secret = Buffer.from(passphrase.normalize('NFC'), 'utf8');
   var salt = hash256(address).slice(0, 4);
 
@@ -151,9 +149,7 @@ function finishDecryptRaw(buffer, salt, compressed, scryptBuf) {
 
   var privateKey = xor(derivedHalf1, plainText);
 
-  // verify salt matches address
-  var d = BigInt('0x' + privateKey.toString(16));
-  var address = getAddress(d, compressed);
+  var address = getAddress(privateKey, compressed);
   var checksum = hash256(address).slice(0, 4);
   if (Buffer.compare(salt, checksum)) throw new Error('Invalid checksum');
 
@@ -258,10 +254,9 @@ function getPassIntAndPoint(preFactor, ownerEntropy, hasLotSeq) {
   } else {
     passFactor = preFactor;
   }
-  const passInt = BigInt('0x' + passFactor.toString('hex'));
   return {
     passInt,
-    passPoint: secp256k1.Point.fromPrivateKey(passInt).toRawBytes(true),
+    passPoint: secp256k1.Point.fromPrivateKey(passFactor).toRawBytes(true),
   };
 }
 
@@ -281,7 +276,7 @@ function finishDecryptECMult(seedBPass, encryptedPart1, encryptedPart2, passInt,
     derivedHalf1.slice(0, 16)
   );
   var seedB = Buffer.concat([seedBPart1, seedBPart2], 24);
-  var factorB = BigInt('0x' + hash256(seedB).toString('hex'));
+  var factorB = hash256(seedB);
 
   // d = passFactor * factorB (mod n)
   var d = passInt.multiply(factorB).mod(secp256k1.CURVE.n);
