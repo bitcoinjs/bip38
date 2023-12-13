@@ -1,12 +1,10 @@
-var aes = require('@noble/ciphers/aes');
+var aes = require('@noble/ciphers/aes')
 var assert = require('assert')
 var bs58check = require('bs58check')
 var createHash = require('create-hash')
 var scrypt = require('scryptsy')
 var xor = require('buffer-xor/inplace')
-
-var ecurve = require('ecurve')
-var curve = ecurve.getCurveByName('secp256k1')
+var { secp256k1 } = require('@noble/curves/secp256k1')
 
 var BigInteger = require('bigi')
 
@@ -37,10 +35,11 @@ function hash256 (buffer) {
 }
 
 function getAddress (d, compressed) {
-  var Q = curve.G.multiply(d).getEncoded(compressed)
-  var hash = hash160(Q)
-  var payload = Buffer.allocUnsafe(21)
-  payload.writeUInt8(0x00, 0) // XXX TODO FIXME bitcoin only??? damn you BIP38
+  const dBigInt = BigInt('0x' + d.toString(16));
+  const Q = secp256k1.getPublicKey(dBigInt);
+  const hash = hash160(Q)
+  const payload = Buffer.allocUnsafe(21)
+  payload.writeUInt8(0x00, 0) // Bitcoin version byte
   hash.copy(payload, 1)
 
   return bs58check.encode(payload)
@@ -270,7 +269,7 @@ function getPassIntAndPoint (preFactor, ownerEntropy, hasLotSeq) {
   const passInt = BigInteger.fromBuffer(passFactor)
   return {
     passInt,
-    passPoint: curve.G.multiply(passInt).getEncoded(true)
+    passPoint: secp256k1.Point.fromPrivateKey(passInt).toRawBytes(true)
   }
 }
 
@@ -291,7 +290,7 @@ function finishDecryptECMult(seedBPass, encryptedPart1, encryptedPart2, passInt,
   var factorB = BigInteger.fromBuffer(hash256(seedB));
 
   // d = passFactor * factorB (mod n)
-  var d = passInt.multiply(factorB).mod(curve.n);
+  var d = passInt.multiply(factorB).mod(secp256k1.CURVE.n);
 
   return {
     privateKey: d.toBuffer(32),
