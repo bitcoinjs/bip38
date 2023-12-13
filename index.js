@@ -1,13 +1,20 @@
 var aes = require('@noble/ciphers/aes')
-var assert = require('assert')
 var { scrypt, scryptAsync } = require('@noble/hashes/scrypt')
-var xor = require('buffer-xor/inplace')
 var { secp256k1 } = require('@noble/curves/secp256k1')
 var { sha256 } = require('@noble/hashes/sha256')
 var { ripemd160 } = require('@noble/hashes/ripemd160')
 var { createBase58check } = require('@scure/base')
-var BigInteger = require('bigi')
 var bs58check = createBase58check(sha256)
+
+function xor (a, b) {
+  var length = Math.min(a.length, b.length)
+
+  for (var i = 0; i < length; ++i) {
+    a[i] = a[i] ^ b[i]
+  }
+
+  return a
+}
 
 // constants
 var SCRYPT_PARAMS = {
@@ -15,7 +22,6 @@ var SCRYPT_PARAMS = {
   r: 8,
   p: 8
 }
-var NULL = Buffer.alloc(0)
 
 function hash160 (buffer) {
   return Buffer.from(ripemd160(sha256(buffer)))
@@ -39,7 +45,7 @@ function getAddress (d, compressed) {
 function prepareEncryptRaw (buffer, compressed, passphrase, scryptParams) {
   if (buffer.length !== 32) throw new Error('Invalid private key length')
 
-  var d = BigInteger.fromBuffer(buffer)
+  var d = BigInt('0x' + buffer.toString('hex'))
   var address = getAddress(d, compressed)
   var secret = Buffer.from(passphrase.normalize('NFC'), 'utf8')
   var salt = hash256(address).slice(0, 4)
@@ -158,10 +164,10 @@ function finishDecryptRaw (buffer, salt, compressed, scryptBuf) {
   var privateKey = xor(derivedHalf1, plainText)
 
   // verify salt matches address
-  var d = BigInteger.fromBuffer(privateKey)
+  var d = BigInt('0x' + privateKey.toString(16))
   var address = getAddress(d, compressed)
   var checksum = hash256(address).slice(0, 4)
-  assert.ok(!Buffer.compare(salt, checksum))
+  if (Buffer.compare(salt, checksum)) throw new Error('Invalid checksum')
 
   return {
     privateKey: privateKey,
@@ -215,7 +221,7 @@ function prepareDecryptECMult (buffer, passphrase, onProgress, scryptParams) {
   var compressed = (flag & 0x20) !== 0
   var hasLotSeq = (flag & 0x04) !== 0
 
-  assert.strictEqual((flag & 0x24), flag, 'Invalid private key.')
+  if ((flag & 0x24) !== flag) throw new Error('Invalid private key.')
 
   var addressHash = buffer.slice(2, 6)
   var ownerEntropy = buffer.slice(6, 14)
@@ -258,38 +264,36 @@ function getPassIntAndPoint (preFactor, ownerEntropy, hasLotSeq) {
   } else {
     passFactor = preFactor
   }
-  const passInt = BigInteger.fromBuffer(passFactor)
+  const passInt = BigInt('0x' + passFactor.toString('hex'))
   return {
     passInt,
     passPoint: secp256k1.Point.fromPrivateKey(passInt).toRawBytes(true)
   }
 }
 
+function finishDecryptECMult (seedBPass, encryptedPart1, encryptedPart2, passInt, compressed) {
+  var derivedHalf1 = seedBPass.slice(0, 32)
+  var derivedHalf2 = seedBPass.slice(32, 64)
 
-function finishDecryptECMult(seedBPass, encryptedPart1, encryptedPart2, passInt, compressed) {
-  var derivedHalf1 = seedBPass.slice(0, 32);
-  var derivedHalf2 = seedBPass.slice(32, 64);
+  var stream = aes.ecb(derivedHalf2, { disablePadding: true })
 
-  var stream = aes.ecb(derivedHalf2, { disablePadding: true });
-
-  var decryptedPart2 = stream.decrypt(encryptedPart2);
-  var tmp = xor(decryptedPart2, derivedHalf1.slice(16, 32));
-  var seedBPart2 = tmp.slice(8, 16);
+  var decryptedPart2 = stream.decrypt(encryptedPart2)
+  var tmp = xor(decryptedPart2, derivedHalf1.slice(16, 32))
+  var seedBPart2 = tmp.slice(8, 16)
 
   // Reusing the stream for the second part of decryption
-  var seedBPart1 = xor(stream.decrypt(Buffer.concat([encryptedPart1, tmp.slice(0, 8)])), derivedHalf1.slice(0, 16));
-  var seedB = Buffer.concat([seedBPart1, seedBPart2], 24);
-  var factorB = BigInteger.fromBuffer(hash256(seedB));
+  var seedBPart1 = xor(stream.decrypt(Buffer.concat([encryptedPart1, tmp.slice(0, 8)])), derivedHalf1.slice(0, 16))
+  var seedB = Buffer.concat([seedBPart1, seedBPart2], 24)
+  var factorB = BigInt('0x' + hash256(seedB).toString('hex'))
 
   // d = passFactor * factorB (mod n)
-  var d = passInt.multiply(factorB).mod(secp256k1.CURVE.n);
+  var d = passInt.multiply(factorB).mod(secp256k1.CURVE.n)
 
   return {
     privateKey: d.toBuffer(32),
     compressed: compressed
-  };
+  }
 }
-
 
 async function decryptECMultAsync (buffer, passphrase, onProgress, scryptParams) {
   buffer = buffer.slice(1) // FIXME: we can avoid this
