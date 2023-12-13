@@ -147,29 +147,27 @@ function prepareDecryptRaw (buffer, onProgress, scryptParams) {
   }
 }
 
+function finishDecryptRaw (buffer, salt, compressed, scryptBuf) {
+  var derivedHalf1 = scryptBuf.slice(0, 32)
+  var derivedHalf2 = scryptBuf.slice(32, 64)
 
-function finishDecryptRaw(buffer, salt, compressed, scryptBuf) {
-  var derivedHalf1 = scryptBuf.slice(0, 32);
-  var derivedHalf2 = scryptBuf.slice(32, 64);
+  var privKeyBuf = Buffer.from(buffer.slice(7, 7 + 32))
+  var stream = aes.ecb(derivedHalf2, { disablePadding: true })
+  var plainText = stream.decrypt(privKeyBuf)
 
-  var privKeyBuf = Buffer.from(buffer.slice(7, 7 + 32));
-  var stream = aes.ecb(derivedHalf2, { disablePadding: true });
-  var plainText = stream.decrypt(privKeyBuf);
-
-  var privateKey = xor(derivedHalf1, plainText);
+  var privateKey = xor(derivedHalf1, plainText)
 
   // verify salt matches address
-  var d = BigInteger.fromBuffer(privateKey);
-  var address = getAddress(d, compressed);
-  var checksum = hash256(address).slice(0, 4);
-  assert.deepStrictEqual(salt, checksum);
+  var d = BigInteger.fromBuffer(privateKey)
+  var address = getAddress(d, compressed)
+  var checksum = hash256(address).slice(0, 4)
+  assert.ok(!Buffer.compare(salt, checksum))
 
   return {
     privateKey: privateKey,
     compressed: compressed
-  };
+  }
 }
-
 
 async function decryptRawAsync (buffer, passphrase, onProgress, scryptParams) {
   scryptParams = scryptParams || SCRYPT_PARAMS
