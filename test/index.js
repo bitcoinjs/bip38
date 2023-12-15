@@ -2,11 +2,9 @@
 
 import assert from "assert";
 import { sha256 } from "@noble/hashes/sha256";
-import { createBase58check } from "@scure/base";
+import bs58check from "bs58check";
 import * as bip38 from "../index.js";
 import fixtures from "./fixtures.js";
-
-const bs58check = createBase58check(sha256);
 
 function concat(...arrays) {
   if (arrays.length === 1) return arrays[0];

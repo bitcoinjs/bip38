@@ -5,9 +5,7 @@ import { secp256k1 } from "@noble/curves/secp256k1";
 import { ripemd160 } from "@noble/hashes/ripemd160";
 import { scrypt, scryptAsync } from "@noble/hashes/scrypt";
 import { sha256 } from "@noble/hashes/sha256";
-import { createBase58check } from "@scure/base";
-
-const bs58check = createBase58check(sha256);
+import bs58check from "bs58check";
 
 // constants
 const SCRYPT_PARAMS = {
