@@ -1,12 +1,12 @@
 /* global describe, it */
 
-let assert = require('assert');
-let bip38 = require('../');
-let fixtures = require('./fixtures');
+const assert = require("assert");
+const bip38 = require("../");
+const fixtures = require("./fixtures");
 
-let { sha256 } = require('@noble/hashes/sha256');
-let { createBase58check } = require('@scure/base');
-let bs58check = createBase58check(sha256);
+const { sha256 } = require("@noble/hashes/sha256");
+const { createBase58check } = require("@scure/base");
+const bs58check = createBase58check(sha256);
 
 function concat(...arrays) {
   if (arrays.length === 1) return arrays[0];
@@ -20,7 +20,7 @@ function concat(...arrays) {
   return result;
 }
 
-let wif = {
+const wif = {
   encode(prefix, privKey, compressed) {
     let k = privKey;
     if (compressed) k = concat(privKey, new Uint8Array([0x01]));
@@ -29,116 +29,126 @@ let wif = {
 };
 
 function replaceUnicode(str) {
-  let map = {
-    '\\u03D2\\u0301\\u{0000}\\u{00010400}\\u{0001F4A9}':
-      '\u03D2\u0301\u{0000}\u{00010400}\u{0001F4A9}',
+  const map = {
+    "\\u03D2\\u0301\\u{0000}\\u{00010400}\\u{0001F4A9}":
+      "\u03D2\u0301\u{0000}\u{00010400}\u{0001F4A9}",
   };
-  if (map[str]) str = map[str];
-  return str;
+  return map[str] || str;
 }
 
-describe('bip38', function () {
+describe("bip38", function () {
   this.timeout(200000);
 
-  describe('decrypt', function () {
-    fixtures.valid.forEach(function (f) {
-      it('should decrypt ' + f.description, function () {
-        let result = bip38.decrypt(f.bip38, replaceUnicode(f.passphrase));
-
-        assert.strictEqual(wif.encode(0x80, result.privateKey, result.compressed), f.wif);
-      });
-    });
-
-    fixtures.invalid.decrypt.forEach(function (f) {
-      it('should throw ' + f.description, function () {
-        assert.throws(
-          function () {
-            bip38.decrypt(f.bip38, f.passphrase);
-          },
-          new RegExp(f.description, 'i')
-        );
-      });
-    });
-
-    fixtures.invalid.verify.forEach(function (f) {
-      it('should throw because ' + f.description, function () {
-        assert.throws(function () {
-          bip38.decrypt(f.base58, 'foobar');
-        }, new RegExp(f.exception));
-      });
-    });
-  });
-
-  describe('encrypt', function () {
-    fixtures.valid.forEach(function (f) {
-      if (f.decryptOnly) return;
-
-      it('should encrypt ' + f.description, function () {
-        let buffer = bs58check.decode(f.wif);
+  describe("decrypt", () => {
+    for (const f of fixtures.valid) {
+      it(`should decrypt ${f.description}`, () => {
+        const result = bip38.decrypt(f.bip38, replaceUnicode(f.passphrase));
 
         assert.strictEqual(
-          bip38.encrypt(buffer.slice(1, 33), !!buffer[33], replaceUnicode(f.passphrase)),
-          f.bip38
+          wif.encode(0x80, result.privateKey, result.compressed),
+          f.wif,
         );
       });
-    });
-  });
+    }
 
-  describe('decryptAsync', function () {
-    fixtures.valid.forEach(function (f) {
-      it('should decrypt ' + f.description, async function () {
-        let result = await bip38.decryptAsync(f.bip38, replaceUnicode(f.passphrase));
-
-        assert.strictEqual(wif.encode(0x80, result.privateKey, result.compressed), f.wif);
+    for (const f of fixtures.invalid.decrypt) {
+      it(`should throw ${f.description}`, () => {
+        assert.throws(() => {
+          bip38.decrypt(f.bip38, f.passphrase);
+        }, new RegExp(f.description, "i"));
       });
-    });
+    }
 
-    fixtures.invalid.decrypt.forEach(function (f) {
-      it('should throw ' + f.description, async function () {
-        assert.rejects(
-          async function () {
-            await bip38.decryptAsync(f.bip38, replaceUnicode(f.passphrase));
-          },
-          new RegExp(f.description, 'i')
-        );
-      });
-    });
-
-    fixtures.invalid.verify.forEach(function (f) {
-      it('should throw because ' + f.description, async function () {
-        assert.rejects(async function () {
-          await bip38.decryptAsync(f.base58, 'foobar');
+    for (const f of fixtures.invalid.verify) {
+      it(`should throw because ${f.description}`, () => {
+        assert.throws(() => {
+          bip38.decrypt(f.base58, "foobar");
         }, new RegExp(f.exception));
       });
-    });
+    }
   });
 
-  describe('encryptAsync', function () {
-    fixtures.valid.forEach(function (f) {
+  describe("encrypt", () => {
+    for (const f of fixtures.valid) {
       if (f.decryptOnly) return;
 
-      it('should encrypt ' + f.description, async function () {
-        let buffer = bs58check.decode(f.wif);
+      it(`should encrypt ${f.description}`, () => {
+        const buffer = bs58check.decode(f.wif);
 
         assert.strictEqual(
-          await bip38.encryptAsync(buffer.slice(1, 33), !!buffer[33], replaceUnicode(f.passphrase)),
-          f.bip38
+          bip38.encrypt(
+            buffer.slice(1, 33),
+            !!buffer[33],
+            replaceUnicode(f.passphrase),
+          ),
+          f.bip38,
         );
       });
-    });
+    }
   });
 
-  describe('verify', function () {
-    fixtures.valid.forEach(function (f) {
-      it('should return true for ' + f.bip38, function () {
+  describe("decryptAsync", () => {
+    for (const f of fixtures.valid) {
+      it(`should decrypt ${f.description}`, async () => {
+        const result = await bip38.decryptAsync(
+          f.bip38,
+          replaceUnicode(f.passphrase),
+        );
+
+        assert.strictEqual(
+          wif.encode(0x80, result.privateKey, result.compressed),
+          f.wif,
+        );
+      });
+    }
+
+    for (const f of fixtures.invalid.decrypt) {
+      it(`should throw ${f.description}`, async () => {
+        assert.rejects(async () => {
+          await bip38.decryptAsync(f.bip38, replaceUnicode(f.passphrase));
+        }, new RegExp(f.description, "i"));
+      });
+    }
+
+    for (const f of fixtures.invalid.verify) {
+      it(`should throw because ${f.description}`, async () => {
+        assert.rejects(async () => {
+          await bip38.decryptAsync(f.base58, "foobar");
+        }, new RegExp(f.exception));
+      });
+    }
+  });
+
+  describe("encryptAsync", () => {
+    for (const f of fixtures.valid) {
+      if (f.decryptOnly) return;
+
+      it(`should encrypt ${f.description}`, async () => {
+        const buffer = bs58check.decode(f.wif);
+
+        assert.strictEqual(
+          await bip38.encryptAsync(
+            buffer.slice(1, 33),
+            !!buffer[33],
+            replaceUnicode(f.passphrase),
+          ),
+          f.bip38,
+        );
+      });
+    }
+  });
+
+  describe("verify", () => {
+    for (const f of fixtures.valid) {
+      it(`should return true for ${f.bip38}`, () => {
         assert(bip38.verify(f.bip38));
       });
-    });
+    }
 
-    fixtures.invalid.verify.forEach(function (f) {
-      it('should return false for ' + f.description, function () {
+    for (const f of fixtures.invalid.verify) {
+      it(`should return false for ${f.description}`, () => {
         assert(!bip38.verify(f.base58));
       });
-    });
+    }
   });
 });
