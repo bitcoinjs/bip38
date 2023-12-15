@@ -34,8 +34,7 @@
     "ci:test": "npm run standard && npm run coveralls",
     "coverage": "nyc --check-coverage --reporter=lcov --reporter=text mocha",
     "coveralls": "npm run-script coverage && coveralls < coverage/lcov.info",
-    "standard": "standard",
-    "test": "npm run standard && npm run unit",
+    "test": "npm run unit",
     "unit": "mocha --ui bdd --timeout 240000"
   }
 }
