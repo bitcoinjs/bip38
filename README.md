@@ -33,13 +33,13 @@ BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys 
 ### encrypt(buffer, compressed, passphrase[, progressCallback, scryptParams])
 
 ``` javascript
-var bip38 = require('bip38')
-var wif = require('wif')
+import { encrypt } from "bip38"
+import wif from "wif"
 
-var myWifString = '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR'
-var decoded = wif.decode(myWifString)
+const myWifString = '5KN7MzqK5wt2TP1fQCYyHBtDrXdJuXbUzm4A9rKAteGu3Qi5CVR'
+const decoded = wif.decode(myWifString)
 
-var encryptedKey = bip38.encrypt(decoded.privateKey, decoded.compressed, 'TestingOneTwoThree')
+const encryptedKey = encrypt(decoded.privateKey, decoded.compressed, 'TestingOneTwoThree')
 console.log(encryptedKey)
 // => '6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg'
 ```
@@ -48,12 +48,12 @@ console.log(encryptedKey)
 ### decrypt(encryptedKey, passphrase[, progressCallback, scryptParams])
 
 ``` javascript
-var bip38 = require('bip38')
-var wif = require('wif')
+import { decrypt } from "bip38"
+import wif from "wif"
 
 var encryptedKey = '6PRVWUbkzzsbcVac2qwfssoUJAN1Xhrg6bNk8J7Nzm5H7kxEbn2Nh2ZoGg'
-var decryptedKey = bip38.decrypt(encryptedKey, 'TestingOneTwoThree', function (status) {
-  console.log(status.percent) // will print the percent every time current increases by 1000
+var decryptedKey = decrypt(encryptedKey, 'TestingOneTwoThree', function (percent) {
+  console.log(percent) // will print the percent every time current increases by 1000
 })
 
 console.log(wif.encode(0x80, decryptedKey.privateKey, decryptedKey.compressed))

@@ -1,11 +1,11 @@
 /* global describe, it */
 
-const assert = require("assert");
-const bip38 = require("../");
-const fixtures = require("./fixtures");
+import assert from "assert";
+import { sha256 } from "@noble/hashes/sha256";
+import { createBase58check } from "@scure/base";
+import * as bip38 from "../index.js";
+import fixtures from "./fixtures.js";
 
-const { sha256 } = require("@noble/hashes/sha256");
-const { createBase58check } = require("@scure/base");
 const bs58check = createBase58check(sha256);
 
 function concat(...arrays) {

@@ -1,14 +1,11 @@
-const aes = require("@noble/ciphers/aes");
-const { scrypt, scryptAsync } = require("@noble/hashes/scrypt");
-const { secp256k1 } = require("@noble/curves/secp256k1");
-const { sha256 } = require("@noble/hashes/sha256");
-const { ripemd160 } = require("@noble/hashes/ripemd160");
-const { createBase58check } = require("@scure/base");
-const {
-  bytesToNumberBE,
-  numberToBytesBE,
-} = require("@noble/curves/abstract/utils");
-const { mod } = require("@noble/curves/abstract/modular");
+import { ecb } from "@noble/ciphers/aes";
+import { mod } from "@noble/curves/abstract/modular";
+import { bytesToNumberBE, numberToBytesBE } from "@noble/curves/abstract/utils";
+import { secp256k1 } from "@noble/curves/secp256k1";
+import { ripemd160 } from "@noble/hashes/ripemd160";
+import { scrypt, scryptAsync } from "@noble/hashes/scrypt";
+import { sha256 } from "@noble/hashes/sha256";
+import { createBase58check } from "@scure/base";
 
 const bs58check = createBase58check(sha256);
 
@@ -74,7 +71,7 @@ function finishEncryptRaw(buffer, compressed, salt, scryptBuf) {
 
   const xorBuf = xor(derivedHalf1, buffer);
 
-  const stream = aes.ecb(derivedHalf2, { disablePadding: true });
+  const stream = ecb(derivedHalf2, { disablePadding: true });
   const cipherText = stream.encrypt(xorBuf);
 
   // 0x01 | 0x42 | flagByte | salt (4) | cipherText (32)
@@ -109,7 +106,7 @@ async function encryptRawAsync(
   return finishEncryptRaw(buffer, compressed, salt, scryptBuf);
 }
 
-function encryptRaw(
+export function encryptRaw(
   buffer,
   compressed,
   passphrase,
@@ -130,7 +127,7 @@ function encryptRaw(
   return finishEncryptRaw(buffer, compressed, salt, scryptBuf);
 }
 
-async function encryptAsync(
+export async function encryptAsync(
   buffer,
   compressed,
   passphrase,
@@ -148,7 +145,13 @@ async function encryptAsync(
   );
 }
 
-function encrypt(buffer, compressed, passphrase, onProgress, scryptParams) {
+export function encrypt(
+  buffer,
+  compressed,
+  passphrase,
+  onProgress,
+  scryptParams,
+) {
   return bs58check.encode(
     encryptRaw(buffer, compressed, passphrase, onProgress, scryptParams),
   );
@@ -180,7 +183,7 @@ function finishDecryptRaw(buffer, salt, compressed, scryptBuf) {
   const derivedHalf2 = scryptBuf.slice(32, 64);
 
   const privKeyBuf = new Uint8Array(buffer.slice(7, 7 + 32));
-  const stream = aes.ecb(derivedHalf2, { disablePadding: true });
+  const stream = ecb(derivedHalf2, { disablePadding: true });
   const plainText = stream.decrypt(privKeyBuf);
 
   const privateKey = xor(derivedHalf1, plainText);
@@ -195,7 +198,7 @@ function finishDecryptRaw(buffer, salt, compressed, scryptBuf) {
   };
 }
 
-async function decryptRawAsync(
+export async function decryptRawAsync(
   buffer,
   passphrase,
   onProgress,
@@ -223,7 +226,7 @@ async function decryptRawAsync(
   return finishDecryptRaw(buffer, salt, compressed, scryptBuf);
 }
 
-function decryptRaw(
+export function decryptRaw(
   buffer,
   passphrase,
   onProgress,
@@ -251,7 +254,12 @@ function decryptRaw(
   return finishDecryptRaw(bufferArray, salt, compressed, scryptBuf);
 }
 
-async function decryptAsync(string, passphrase, onProgress, scryptParams) {
+export async function decryptAsync(
+  string,
+  passphrase,
+  onProgress,
+  scryptParams,
+) {
   return decryptRawAsync(
     bs58check.decode(string),
     passphrase,
@@ -260,7 +268,7 @@ async function decryptAsync(string, passphrase, onProgress, scryptParams) {
   );
 }
 
-function decrypt(string, passphrase, onProgress, scryptParams) {
+export function decrypt(string, passphrase, onProgress, scryptParams) {
   return decryptRaw(
     bs58check.decode(string),
     passphrase,
@@ -336,7 +344,7 @@ function finishDecryptECMult(
   const derivedHalf1 = seedBPass.slice(0, 32);
   const derivedHalf2 = seedBPass.slice(32, 64);
 
-  const stream = aes.ecb(derivedHalf2, { disablePadding: true });
+  const stream = ecb(derivedHalf2, { disablePadding: true });
 
   const decryptedPart2 = stream.decrypt(encryptedPart2);
   const tmp = xor(decryptedPart2, derivedHalf1.slice(16, 32));
@@ -356,7 +364,7 @@ function finishDecryptECMult(
   return { privateKey: numberToBytesBE(d), compressed };
 }
 
-async function decryptECMultAsync(
+export async function decryptECMultAsync(
   buffer,
   passphrase,
   onProgress,
@@ -411,7 +419,7 @@ async function decryptECMultAsync(
   );
 }
 
-function decryptECMult(
+export function decryptECMult(
   buffer,
   passphrase,
   onProgress,
@@ -464,7 +472,7 @@ function decryptECMult(
   );
 }
 
-function verify(string) {
+export function verify(string) {
   let decoded;
   try {
     decoded = bs58check.decode(string);
@@ -491,17 +499,3 @@ function verify(string) {
 
   return true;
 }
-
-module.exports = {
-  decrypt,
-  decryptECMult,
-  decryptRaw,
-  encrypt,
-  encryptRaw,
-  decryptAsync,
-  decryptECMultAsync,
-  decryptRawAsync,
-  encryptAsync,
-  encryptRawAsync,
-  verify,
-};
