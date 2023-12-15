@@ -29,12 +29,6 @@ BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys 
     npm install --save bip38
 
 
-### Async methods
-
-Async methods are available, but using them will be slower, but free up the event loop in intervals you choose.
-
-For benchmark results, please see the section in the README of the [scryptsy](https://github.com/cryptocoinjs/scryptsy/tree/395c3b09b21e06ea4a6cc2933e046c0984a414c5#benchmarks) library. Increasing the interval will decrease the performance hit, but increase the span between event loop free ups (UI drawing etc.) promiseInterval is the last optional parameter after scryptParams. There is no recommendation currently, as the performance trade off is app specific.
-
 ### API
 ### encrypt(buffer, compressed, passphrase[, progressCallback, scryptParams])
 
