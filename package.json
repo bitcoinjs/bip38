@@ -30,7 +30,7 @@
     "type": "git"
   },
   "scripts": {
-    "biome": "biome check *.js **/*.js",
+    "biome": "biome check *.js* **/*.js*",
     "browser-test": "mochify --wd -R spec --timeout 100000",
     "ci:test": "npm run biome && npm run coveralls",
     "coverage": "nyc --check-coverage --reporter=lcov --reporter=text mocha",
