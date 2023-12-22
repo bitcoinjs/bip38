@@ -497,3 +497,17 @@ export function verify(string) {
 
   return true;
 }
+
+export default {
+  decrypt,
+  decryptECMult,
+  decryptRaw,
+  encrypt,
+  encryptRaw,
+  decryptAsync,
+  decryptECMultAsync,
+  decryptRawAsync,
+  encryptAsync,
+  encryptRawAsync,
+  verify,
+};
