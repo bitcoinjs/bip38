@@ -1,5 +1,5 @@
 {
-  "name": "bip38",
+  "name": "@asoltys/bip38",
   "version": "4.0.0",
   "description": "BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys that is impervious to brute force attacks thus protecting the user.",
   "files": [
