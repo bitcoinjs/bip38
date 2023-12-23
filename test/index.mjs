@@ -3,8 +3,8 @@
 import assert from "assert";
 import { sha256 } from "@noble/hashes/sha256";
 import bs58check from "bs58check";
-import * as bip38 from "../index.js";
-import fixtures from "./fixtures.js";
+import * as bip38 from "../dist/mjs/index.js";
+import fixtures from "./fixtures.mjs";
 
 function concat(...arrays) {
   if (arrays.length === 1) return arrays[0];
