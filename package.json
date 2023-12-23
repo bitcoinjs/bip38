@@ -3,11 +3,18 @@
   "version": "4.0.0",
   "description": "BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys that is impervious to brute force attacks thus protecting the user.",
   "files": [
-    "index.js"
+    "dist/cjs/**/*",
+    "dist/mjs/**/*"
   ],
-  "type": "module",
-  "main": "index.js",
-  "module": "index.js",
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "exports": {
+      ".": {
+          "import": "./dist/mjs/index.js",
+          "require": "./dist/cjs/index.js"
+      }
+  },
+  "types": "dist/mjs/index.d.ts",
   "keywords": [
     "bitcoin",
     "crypto",
@@ -27,7 +34,8 @@
     "coveralls": "^3.0.4",
     "mocha": "^8.4.0",
     "mochify": "^6.2.0",
-    "nyc": "^14.1.1"
+    "nyc": "^14.1.1",
+    "typescript": "^5.3.3"
   },
   "repository": {
     "url": "git@github.com:bitcoinjs/bip38.git",
@@ -35,6 +43,7 @@
   },
   "scripts": {
     "biome": "biome check *.js* **/*.js*",
+    "build": "rm -fr dist/* && tsc -p tsconfig.json && tsc -p tsconfig-cjs.json && ./fixup",
     "browser-test": "mochify --wd -R spec --timeout 100000",
     "ci:test": "npm run biome && npm run coveralls",
     "coverage": "nyc --check-coverage --reporter=lcov --reporter=text mocha",

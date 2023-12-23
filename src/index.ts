@@ -6,6 +6,7 @@ import { ripemd160 } from "@noble/hashes/ripemd160";
 import { scrypt, scryptAsync } from "@noble/hashes/scrypt";
 import { sha256 } from "@noble/hashes/sha256";
 import bs58check from "bs58check";
+import { TextEncoder } from 'util';
 
 // constants
 const SCRYPT_PARAMS = {
@@ -57,6 +58,7 @@ function prepareEncryptRaw(buffer, compressed, passphrase, scryptParams) {
 
   const address = getAddress(buffer, compressed);
   const secret = new TextEncoder().encode(passphrase.normalize("NFC"));
+
   const salt = hash256(address).slice(0, 4);
   const { N, r, p } = scryptParams;
 
@@ -359,7 +361,7 @@ function finishDecryptECMult(
   // d = passFactor * factorB (mod n)
   const d = mod(passInt * bytesToNumberBE(factorB), secp256k1.CURVE.n);
 
-  return { privateKey: numberToBytesBE(d), compressed };
+  return { privateKey: numberToBytesBE(d, 32), compressed };
 }
 
 export async function decryptECMultAsync(
