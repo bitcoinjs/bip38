@@ -90,8 +90,9 @@ async function encryptRawAsync(
   compressed,
   passphrase,
   onProgress,
-  scryptParams = SCRYPT_PARAMS,
+  scryptParams,
 ) {
+  scryptParams = { ...SCRYPT_PARAMS, ...scryptParams };
   const { secret, salt, N, r, p } = prepareEncryptRaw(
     buffer,
     compressed,
@@ -111,8 +112,9 @@ export function encryptRaw(
   compressed,
   passphrase,
   onProgress,
-  scryptParams = SCRYPT_PARAMS,
+  scryptParams,
 ) {
+  scryptParams = { ...SCRYPT_PARAMS, ...scryptParams };
   const { secret, salt, N, r, p } = prepareEncryptRaw(
     buffer,
     compressed,
@@ -202,8 +204,9 @@ export async function decryptRawAsync(
   buffer,
   passphrase,
   onProgress,
-  scryptParams = SCRYPT_PARAMS,
+  scryptParams,
 ) {
+  scryptParams = { ...SCRYPT_PARAMS, ...scryptParams };
   const { salt, compressed, N, r, p, decryptEC } = prepareDecryptRaw(
     buffer,
     onProgress,
@@ -230,8 +233,9 @@ export function decryptRaw(
   buffer,
   passphrase,
   onProgress,
-  scryptParams = SCRYPT_PARAMS,
+  scryptParams,
 ) {
+  scryptParams = { ...SCRYPT_PARAMS, ...scryptParams };
   const bufferArray = new Uint8Array(buffer);
   const { salt, compressed, N, r, p, decryptEC } = prepareDecryptRaw(
     bufferArray,
@@ -368,8 +372,10 @@ export async function decryptECMultAsync(
   buffer,
   passphrase,
   onProgress,
-  scryptParams = SCRYPT_PARAMS,
+  scryptParams,
 ) {
+  scryptParams = { ...SCRYPT_PARAMS, ...scryptParams };
+
   const secret = new TextEncoder().encode(passphrase.normalize("NFC"));
 
   const {
@@ -423,8 +429,9 @@ export function decryptECMult(
   buffer,
   passphrase,
   onProgress,
-  scryptParams = SCRYPT_PARAMS,
+  scryptParams,
 ) {
+  scryptParams = { ...SCRYPT_PARAMS, ...scryptParams };
   const secret = new TextEncoder().encode(passphrase.normalize("NFC"));
   const {
     addressHash,

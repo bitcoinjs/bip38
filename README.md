@@ -29,6 +29,18 @@ BIP38 is a standard process to encrypt Bitcoin and crypto currency private keys 
     npm install --save bip38
 
 
+### Async methods
+
+Async methods are available. Using them will be slower but will free up the event loop. You can set `asyncTickInterval` in the scryptParams to control the maximum amount of time the function can block.
+
+   `N` is cpu/mem work factor (power of 2 e.g. 2**18)
+   `r` is block size (8 is common), fine-tunes sequential memory read size and performance
+   `p` is parallelization factor (1 is common)
+   `dkLen` is output key length in bytes e.g. 32.
+   `asyncTick` - (default: 10) max time in ms for which async function can block execution
+   `maxmem` - (default: `1024 ** 3 + 1024` aka 1GB+1KB). A limit that the app could use for scrypt
+   `onProgress` - callback function that would be executed for progress report
+
 ### API
 ### encrypt(buffer, compressed, passphrase[, progressCallback, scryptParams])
 
