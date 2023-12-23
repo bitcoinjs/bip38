@@ -6,7 +6,7 @@ import { ripemd160 } from "@noble/hashes/ripemd160";
 import { scrypt, scryptAsync } from "@noble/hashes/scrypt";
 import { sha256 } from "@noble/hashes/sha256";
 import bs58check from "bs58check";
-import { TextEncoder } from 'util';
+import TextEncoder from './encoder.js';
 
 // constants
 const SCRYPT_PARAMS = {

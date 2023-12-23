@@ -9,10 +9,10 @@
   "main": "dist/cjs/index.js",
   "module": "dist/mjs/index.js",
   "exports": {
-      ".": {
-          "import": "./dist/mjs/index.js",
-          "require": "./dist/cjs/index.js"
-      }
+    ".": {
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
+    }
   },
   "types": "dist/mjs/index.d.ts",
   "keywords": [
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^1.4.1",
+    "@types/node": "^20.10.5",
     "coveralls": "^3.0.4",
     "mocha": "^8.4.0",
     "mochify": "^6.2.0",
