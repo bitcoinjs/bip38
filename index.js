@@ -275,7 +275,7 @@ function getPassIntAndPoint (preFactor, ownerEntropy, hasLotSeq) {
   }
 }
 
-function finishDecryptECMult (seedBPass, encryptedPart1, encryptedPart2, passInt, compressed) {
+function finishDecryptECMult (seedBPass, encryptedPart1, encryptedPart2, passInt, compressed, addressHash) {
   var derivedHalf1 = seedBPass.slice(0, 32)
   var derivedHalf2 = seedBPass.slice(32, 64)
 
@@ -298,6 +298,11 @@ function finishDecryptECMult (seedBPass, encryptedPart1, encryptedPart2, passInt
 
   // d = passFactor * factorB (mod n)
   var d = passInt.multiply(factorB).mod(curve.n)
+
+  // verify address hash
+  var address = getAddress(d, compressed)
+  var checksum = hash256(address).slice(0, 4)
+  assert.deepStrictEqual(addressHash, checksum)
 
   return {
     privateKey: d.toBuffer(32),
@@ -331,7 +336,7 @@ async function decryptECMultAsync (buffer, passphrase, progressCallback, scryptP
 
   var seedBPass = await scrypt.async(passPoint, Buffer.concat([addressHash, ownerEntropy]), 1024, 1, 1, 64, undefined, promiseInterval)
 
-  return finishDecryptECMult(seedBPass, encryptedPart1, encryptedPart2, passInt, compressed)
+  return finishDecryptECMult(seedBPass, encryptedPart1, encryptedPart2, passInt, compressed, addressHash)
 }
 
 function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
@@ -359,7 +364,7 @@ function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
 
   var seedBPass = scrypt(passPoint, Buffer.concat([addressHash, ownerEntropy]), 1024, 1, 1, 64)
 
-  return finishDecryptECMult(seedBPass, encryptedPart1, encryptedPart2, passInt, compressed)
+  return finishDecryptECMult(seedBPass, encryptedPart1, encryptedPart2, passInt, compressed, addressHash)
 }
 
 function verify (string) {

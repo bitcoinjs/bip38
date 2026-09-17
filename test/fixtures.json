@@ -76,6 +76,14 @@
       "code": "passphrased3z9rQJHSyBkNBwTRPkUGNVEVrUAcfAXDyRU1V28ie6hNFbqDwbFBvsTK7yWVK",
       "lot": 806938,
       "sequence": 1
+    },
+    {
+      "passphrase": "qwerty",
+      "bip38": "6PnU5voARjBBykwSddwCdcn6Eu9EcsK24Gs5zWxbJbPZYW7eiYQP8XgKbN",
+      "wif": "KxqRtpd9vFju297ACPKHrGkgXuberTveZPXbRDiQ3MXZycSQYtjc",
+      "description": "EC multiply / compression, no lot sequence",
+      "decryptOnly": true,
+      "source": "https://github.com/BlueWallet/BlueWallet/blob/2cd003338401db350d91917a0c3d170ff9a926a8/tests/unit/bip38.test.ts"
     }
   ],
   "invalid": {
