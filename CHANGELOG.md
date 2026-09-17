@@ -1,3 +1,7 @@
+3.1.2 / 2026-09-17
+------------------
+- Verify the derived Bitcoin address hash during synchronous and asynchronous EC-multiply decryption. The corresponding v2 backport is 2.0.4.
+
 3.1.1 / 2020-05-31
 ------------------
 - Add safe-buffer as explicit dependency
