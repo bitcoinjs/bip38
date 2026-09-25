@@ -26,6 +26,12 @@ describe('bip38', function () {
       })
     })
 
+    it('should reject an EC key when the passphrase does not match the address hash', function () {
+      assert.throws(function () {
+        bip38.decrypt('6PfQu77ygVyJLZjfvMLyhLMQbYnu5uguoJJ4kMCLqWwPEdfpwANVS76gTX', 'not-the-passphrase')
+      })
+    })
+
     fixtures.invalid.decrypt.forEach(function (f) {
       it('should throw ' + f.description, function () {
         assert.throws(function () {
