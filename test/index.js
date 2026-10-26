@@ -6,6 +6,10 @@ var bs58check = require('bs58check')
 var fixtures = require('./fixtures')
 var wif = require('wif')
 
+var ecFixtures = fixtures.valid.filter(function (f) {
+  return f.decryptOnly
+})
+
 function replaceUnicode (str) {
   var map = {
     '\\u03D2\\u0301\\u{0000}\\u{00010400}\\u{0001F4A9}': '\u03D2\u0301\u{0000}\u{00010400}\u{0001F4A9}'
@@ -39,6 +43,14 @@ describe('bip38', function () {
         assert.throws(function () {
           bip38.decrypt(f.base58, 'foobar')
         }, new RegExp(f.exception))
+      })
+    })
+
+    ecFixtures.forEach(function (f) {
+      it('should reject a wrong passphrase for ' + f.description, function () {
+        assert.throws(function () {
+          bip38.decrypt(f.bip38, 'wrong passphrase')
+        }, assert.AssertionError)
       })
     })
   })
@@ -77,6 +89,15 @@ describe('bip38', function () {
         assert.rejects(async function () {
           await bip38.decryptAsync(f.base58, 'foobar')
         }, new RegExp(f.exception))
+      })
+    })
+
+    ecFixtures.forEach(function (f) {
+      it('should reject a wrong passphrase for ' + f.description, async function () {
+        await assert.rejects(
+          bip38.decryptAsync(f.bip38, 'wrong passphrase'),
+          assert.AssertionError
+        )
       })
     })
   })
