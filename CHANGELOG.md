@@ -1,3 +1,7 @@
+2.0.4 / 2026-09-17
+------------------
+- Verify the derived Bitcoin address hash during EC-multiply decryption.
+
 2.0.3 / 2019-05-22
 ------------------
 - made compatible for Electron v4

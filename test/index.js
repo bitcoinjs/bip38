@@ -6,6 +6,10 @@ var bs58check = require('bs58check')
 var fixtures = require('./fixtures')
 var wif = require('wif')
 
+var ecFixtures = fixtures.valid.filter(function (f) {
+  return f.decryptOnly
+})
+
 describe('bip38', function () {
   this.timeout(200000)
 
@@ -32,6 +36,25 @@ describe('bip38', function () {
           bip38.decrypt(f.base58, 'foobar')
         }, new RegExp(f.exception))
       })
+    })
+
+    ecFixtures.forEach(function (f) {
+      it('should reject a wrong passphrase for ' + f.description, function () {
+        assert.throws(function () {
+          bip38.decrypt(f.bip38, 'wrong passphrase')
+        }, assert.AssertionError)
+      })
+    })
+
+    it('should preserve raw UTF-8 passphrase handling', function () {
+      var privateKey = bs58check.decode(fixtures.valid[0].wif).slice(1, 33)
+      var encrypted = bip38.encrypt(privateKey, true, 'e\u0301')
+      var result = bip38.decrypt(encrypted, 'e\u0301')
+
+      assert.deepEqual(result.privateKey, privateKey)
+      assert.throws(function () {
+        bip38.decrypt(encrypted, '\u00e9')
+      }, assert.AssertionError)
     })
   })
 

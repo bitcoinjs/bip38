@@ -204,6 +204,11 @@ function decryptECMult (buffer, passphrase, progressCallback, scryptParams) {
   // d = passFactor * factorB (mod n)
   var d = passInt.multiply(factorB).mod(curve.n)
 
+  // verify address hash
+  var address = getAddress(d, compressed)
+  var checksum = hash256(address).slice(0, 4)
+  assert.deepEqual(addressHash, checksum)
+
   return {
     privateKey: d.toBuffer(32),
     compressed: compressed
